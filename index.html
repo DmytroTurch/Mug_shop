@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/style.css" type="text/css">
+
+    <title>Document</title>
+</head>
+<body>
+    <div class="content">
+        <nav>
+            <img class="logo" src="images/logo/logo.png" alt="logo">
+
+            <ul class="menu">
+                <li class="menu__buttons"><a class="text text_black" href="#">Home</a></li>
+                <li class="menu__buttons"><a class="text text_black" href="#">Our Products</a></li>
+                <li class="menu__buttons"><a class="text text_black" href="#">Blog</a></li>
+                <li class="menu__buttons"><a class="text text_black" href="#">About</a></li>
+                <li class="menu__buttons"><a class="text text_black" href="#">Contact</a></li>
+                <li class="menu__buttons"><a class="text text_black" href="#">Styleguide</a></li>
+            </ul>
+
+            <a href="#" class="cart" >
+                <img class="cart__img" src="images/logo/bag.svg" alt="bag">
+
+                <P class="text text_black">Cart</p>
+
+                <div class="cart__counter">
+                    <p class="text text_white">0</p>
+                </div>
+            </a>
+        </nav>
+    </div>
+
+    <div class="back-coloring">
+        <div class="content content_land">
+            <div class="gapping">
+                <h3 class="upspace text text_white text_small">Best place to buy design</h3>
+                <h1 class="text text_white text_big">Coffee Mugs</h1>
+                <h2 class="text text_white text_mid">The most versatile furniture system ever created. Designed to fit your life, made to move and grow.</h2>
+            </div>
+
+            <button class="alllist-button text text_black text_small">Explore Our Products</button>
+        </div>
+    </div>
+
+    <div class="content story">
+        <h2 class="story__header text text_articlehead text_black ">Even the all-powerful Pointing has no control about the blind texts.</h2>
+        <p class="text text_black text_mid story__main">
+            It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br>
+            Even the all-powerful Pointing has no control about the blind texts it is an almost <br>
+            unorthographic life One day however a small line of blind text by the name of Lorem <br>
+            Ipsum decided to leave for the far World of Grammar.
+        </p>
+        
+        <button class="popout">Read the full Story</button>
+        
+    </div>
+
+    <div class="content products">
+        <h1 class="sectionheader"></h1>
+        <div class="section" id="lotsRender"></div>
+    </div>
+
+    <div class="cartPop">
+        <div class="cartPop_content">
+
+            <div class="itemsList">
+                
+            </div>
+
+            <div class="cartOptions">
+                <button class="option cleareCart">Disband Cart</button>
+                <button class="option return">Return to shopping</button>
+            </div>
+
+            <div class="sum">
+                <p class = "sum_content">Items:<span class="numberOfItems"> </span>  General Price:<span class="priceSum"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="./products.js"></script>
+    <script src="./app.js"></script>
+</body>
+</html>
