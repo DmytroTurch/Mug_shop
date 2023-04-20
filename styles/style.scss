@@ -1,5 +1,4 @@
 
-
 @import url('https://fonts.googleapis.com/css2?family=Karla&display=swap');
 
 
@@ -36,7 +35,7 @@ h1, h2, h3, h4, p, a {
     &_big {
         font-size: 47px;
     }
-    &_articlehead {
+    &_articleHead {
         font-size: 28px;
     }
     &_name {
@@ -99,20 +98,6 @@ nav {
         z-index: 5;
         display: flex;
         position: relative;
-// combinator does not work. Avoid using ::after for dush.
-        &:hover ~ .cart::after{
-            visibility: visible;
-        }
-       &::after {
-           content: "";
-            background-color:rgba(162, 95, 75, 0.3) ;
-            border: 1px solid transparent ;
-            width:88px;
-            position: absolute;
-            top:52px;
-            visibility: hidden;
-           
-        }
 
         &__img{
         width: 16px;
@@ -145,7 +130,7 @@ nav {
     }
 }
 
-.alllist-button {
+.allList-button {
     padding: 0px 25px;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -155,7 +140,7 @@ nav {
     cursor: pointer;
 }
 
-.upspace {
+.upSpace {
     text-transform: uppercase;
     letter-spacing: 2px;
 }
@@ -170,7 +155,7 @@ nav {
 
 }
 
-.backcoloring {
+.backColoring {
     background-color: #050827;
 }
 
