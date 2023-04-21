@@ -1,5 +1,3 @@
-/*  eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }]  */
-
 //  Elements from DOM
 
 const productLots = document.getElementById('lotsRender');
@@ -24,6 +22,7 @@ function closeCart() {
 
 function countAllItemsInCart() {
   const selectedItemsNumbers = Array.from(document.getElementsByClassName('numberOfItem'));
+  // FIXME: use reduce() instead of forEach, then you can make counterNum var as const
   let counterNum = 0;
   selectedItemsNumbers.forEach((item) => {
     counterNum += +item.textContent;
@@ -32,15 +31,19 @@ function countAllItemsInCart() {
   document.getElementById('numberOfItems').innerHTML = `${counterNum}`;
 }
 
+// FIXME: Rename to sumAllItemsPriceInCart
 function sumPriceAllItemsInCart() {
   const selectedItemsPrices = Array.from(document.getElementsByClassName('item_actPrice'));
+  // FIXME: use reduce() instead of forEach, then you can make counterNum var as const
   let counterNum = 0;
   selectedItemsPrices.forEach((item) => {
     counterNum += +item.textContent;
   });
+
   document.getElementById('priceSum').innerHTML = `${counterNum}`;
 }
 
+// FIXME: Rename to calculateSameItemsPrice
 function calculatePriceForSameItem(id, numberItems) {
   const priceCalculation = store[id - 1].actualPrice * numberItems;
   const price = document.querySelector(`#item_actPrice${id}`);
@@ -62,7 +65,9 @@ function addOneOfTheseItem(event) {
       const counter = +each.textContent + 1;
       if (counter > store[each.id - 1].amountOfProduct) {
         alert('Sorry the number of available product is limited!');
-      } else { each.innerHTML = counter; }
+      } else {
+        each.innerHTML = counter;
+      }
 
       calculatePriceForSameItem(each.id, +each.textContent);
     }
@@ -89,7 +94,7 @@ function removeOneOfTheseItem(event) {
 }
 
 // Render functions
-
+// TODO: how to rename it?
 function lotsRendering() {
   store.forEach((item) => {
     productLots.innerHTML += `
@@ -115,11 +120,14 @@ function addEListenersToCart() {
   removeButton.forEach((each) => { each.addEventListener('click', removeOneOfTheseItem); });
 }
 
+// TODO: Rename to addItemToCart
 function addItem(event) {
   const theTarget = event.currentTarget.id;
   const thisItem = document.getElementById(`item${theTarget}`);
+  // TODO: how to change this condition? !var
   if (thisItem === null) {
-    for (let i = 0; i < addToCart.length; i++) {
+    // FIXME: use i += 1 || instead of disabling the rule it is better to use foreach() ;)
+    for (let i = 0; i < addToCart.length; i ++) {
       if (addToCart[i].id === theTarget) {
         store.forEach((item) => {
           if (item.id === +theTarget) {
@@ -158,3 +166,14 @@ function addEventListeners() {
 
 lotsRendering();
 addEventListeners();
+
+// TODO: try to calculate allItems price on every btn click, as separate variable(const allItemsPrice).
+// It will reduce the forEach loops and dom manipulation
+// Create kind of array cartItems = [ { id, amount, price } ] and modify it and then depend on it modify the dom
+// const cartItems = [
+//   {
+//     id,
+//     amount,
+//     price
+//   }
+// ];
