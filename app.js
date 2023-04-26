@@ -22,6 +22,7 @@ function closeCart() {
 }
 
 function countAllItemsInCart() {
+  // FIXME: Optimize selectedItemsNumbers and counterNum? use only one reduce
   const selectedItemsNumbers = inCart.map((each) => each.amount);
   const counterNum = selectedItemsNumbers.reduce(
     (accumulator, currentValue) => accumulator + currentValue,
@@ -33,6 +34,7 @@ function countAllItemsInCart() {
 }
 
 function sumAllItemsPriceInCart() {
+  // FIXME: Optimize selectedItemsNumbers and counterNum?u se only one reduce
   const selectedItemsPrices = inCart.map((each) => each.priceOfAll);
   const counterNum = selectedItemsPrices.reduce(
     (accumulator, currentValue) => accumulator + currentValue,
@@ -44,6 +46,7 @@ function sumAllItemsPriceInCart() {
 
 function calculateSameItemsPrice(id) {
   const price = document.querySelector(`#item_actPrice${id}`);
+  // FIXME: why do you need currentItem var?
   inCart.forEach((each) => {
     if (id === each.id) {
       const currentItem = each;
@@ -65,6 +68,7 @@ function clearCart() {
 }
 
 function addOneOfTheseItem(event) {
+  // FIXME: FIXME: FIXME: Rename each in forEach to item everywhere
   inCart.forEach((each) => {
     if (+event.currentTarget.id === each.id) {
       const counter = each.amount + 1;
@@ -72,6 +76,7 @@ function addOneOfTheseItem(event) {
         alert('Sorry the number of available product is limited!');
       } else {
         document.getElementById(`amount${each.id}`).innerHTML = counter;
+        // FIXME: why do you need currentItem var?
         const currentItem = each;
         currentItem.amount = counter;
       }
@@ -92,6 +97,7 @@ function removeOneOfTheseItem(event) {
         inCart.splice(inCart.indexOf(each), 1);
       } else {
         document.querySelector(`#amount${each.id}`).innerHTML = counter;
+        // FIXME: why do you need currentItem var?
         const currentItem = each;
         currentItem.amount = counter;
       }
@@ -157,6 +163,8 @@ function addItemToCart(event) {
               id: item.id,
               amount: 1,
               price: item.actualPrice,
+              // FIXME: You don't need price of all it is redundant information
+              // you can always calculate it in any place
               priceOfAll: item.actualPrice,
             });
           }
@@ -181,6 +189,3 @@ function addEventListeners() {
 
 renderSlots();
 addEventListeners();
-
-// TODO: try to calculate allItems price on every btn click, as separate variable(const allItemsPrice).
-// It will reduce the forEach loops and dom manipulation
