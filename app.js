@@ -120,11 +120,9 @@ function addEListenersToCart() {
 function addItemToCart(event) {
   const theTarget = event.currentTarget.id;
   const thisItem = document.getElementById(`item${theTarget}`);
-  // TODO: how to change this condition? !var
-  if (thisItem === null) {
-    // FIXME: use i += 1 || instead of disabling the rule it is better to use foreach() ;)
-    for (let i = 0; i < addToCart.length; i ++) {
-      if (addToCart[i].id === theTarget) {
+  if (!thisItem) {
+    Array.from(addToCart).forEach((each) => {
+      if (+each.id === +theTarget) {
         store.forEach((item) => {
           if (item.id === +theTarget) {
             itemsLotsContainer.innerHTML += `
@@ -143,7 +141,7 @@ function addItemToCart(event) {
           }
         });
       }
-    }
+    });
   } else {
     addOneOfTheseItem(event);
   }
