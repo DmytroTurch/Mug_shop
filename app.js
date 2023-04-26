@@ -31,8 +31,7 @@ function countAllItemsInCart() {
   document.getElementById('numberOfItems').innerHTML = `${counterNum}`;
 }
 
-// FIXME: Rename to sumAllItemsPriceInCart
-function sumPriceAllItemsInCart() {
+function sumAllItemsPriceInCart() {
   const selectedItemsPrices = Array.from(document.getElementsByClassName('item_actPrice'));
   const counterNum = selectedItemsPrices.reduce(
     (accumulator, currentValue) => accumulator + (+currentValue.textContent),
@@ -42,8 +41,7 @@ function sumPriceAllItemsInCart() {
   document.getElementById('priceSum').innerHTML = `${counterNum}`;
 }
 
-// FIXME: Rename to calculateSameItemsPrice
-function calculatePriceForSameItem(id, numberItems) {
+function calculateSameItemsPrice(id, numberItems) {
   const priceCalculation = store[id - 1].actualPrice * numberItems;
   const price = document.querySelector(`#item_actPrice${id}`);
   price.innerHTML = priceCalculation;
@@ -55,7 +53,7 @@ function clearCart() {
     Array.from(itemsInCart).forEach((each) => { each.remove(); });
   }
   countAllItemsInCart();
-  sumPriceAllItemsInCart();
+  sumAllItemsPriceInCart();
 }
 
 function addOneOfTheseItem(event) {
@@ -68,11 +66,11 @@ function addOneOfTheseItem(event) {
         each.innerHTML = counter;
       }
 
-      calculatePriceForSameItem(each.id, +each.textContent);
+      calculateSameItemsPrice(each.id, +each.textContent);
     }
   });
   countAllItemsInCart();
-  sumPriceAllItemsInCart();
+  sumAllItemsPriceInCart();
 }
 
 function removeOneOfTheseItem(event) {
@@ -84,17 +82,17 @@ function removeOneOfTheseItem(event) {
       } else { each.innerHTML = counter; }
 
       if (document.getElementById(`item${+event.currentTarget.id}`) !== null) {
-        calculatePriceForSameItem(each.id, +each.textContent);
+        calculateSameItemsPrice(each.id, +each.textContent);
       }
     }
   });
   countAllItemsInCart();
-  sumPriceAllItemsInCart();
+  sumAllItemsPriceInCart();
 }
 
 // Render functions
-// TODO: how to rename it?
-function lotsRendering() {
+
+function renderSlots() {
   store.forEach((item) => {
     productLots.innerHTML += `
             <div class="shopLot">
@@ -119,8 +117,7 @@ function addEListenersToCart() {
   removeButton.forEach((each) => { each.addEventListener('click', removeOneOfTheseItem); });
 }
 
-// TODO: Rename to addItemToCart
-function addItem(event) {
+function addItemToCart(event) {
   const theTarget = event.currentTarget.id;
   const thisItem = document.getElementById(`item${theTarget}`);
   // TODO: how to change this condition? !var
@@ -151,7 +148,7 @@ function addItem(event) {
     addOneOfTheseItem(event);
   }
   countAllItemsInCart();
-  sumPriceAllItemsInCart();
+  sumAllItemsPriceInCart();
   event.preventDefault();
 }
 
@@ -160,10 +157,10 @@ function addEventListeners() {
   backShopButton[0].addEventListener('click', closeCart);
   clearCartButton.addEventListener('click', clearCart);
 
-  Array.from(addToCart).forEach((each) => { each.addEventListener('click', addItem); });
+  Array.from(addToCart).forEach((each) => { each.addEventListener('click', addItemToCart); });
 }
 
-lotsRendering();
+renderSlots();
 addEventListeners();
 
 // TODO: try to calculate allItems price on every btn click, as separate variable(const allItemsPrice).
