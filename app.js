@@ -22,11 +22,11 @@ function closeCart() {
 
 function countAllItemsInCart() {
   const selectedItemsNumbers = Array.from(document.getElementsByClassName('numberOfItem'));
-  // FIXME: use reduce() instead of forEach, then you can make counterNum var as const
-  let counterNum = 0;
-  selectedItemsNumbers.forEach((item) => {
-    counterNum += +item.textContent;
-  });
+  const counterNum = selectedItemsNumbers.reduce(
+    (accumulator, currentValue) => accumulator + (+currentValue.textContent),
+    0,
+  );
+
   document.querySelector('#cartCounter').innerHTML = `${counterNum}`;
   document.getElementById('numberOfItems').innerHTML = `${counterNum}`;
 }
@@ -34,11 +34,10 @@ function countAllItemsInCart() {
 // FIXME: Rename to sumAllItemsPriceInCart
 function sumPriceAllItemsInCart() {
   const selectedItemsPrices = Array.from(document.getElementsByClassName('item_actPrice'));
-  // FIXME: use reduce() instead of forEach, then you can make counterNum var as const
-  let counterNum = 0;
-  selectedItemsPrices.forEach((item) => {
-    counterNum += +item.textContent;
-  });
+  const counterNum = selectedItemsPrices.reduce(
+    (accumulator, currentValue) => accumulator + (+currentValue.textContent),
+    0,
+  );
 
   document.getElementById('priceSum').innerHTML = `${counterNum}`;
 }

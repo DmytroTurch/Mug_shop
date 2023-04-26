@@ -33,7 +33,7 @@ h1, h2, h3, h4, p, a {
 .text_big {
   font-size: 47px;
 }
-.text_articlehead {
+.text_articleHead {
   font-size: 28px;
 }
 .text_name {
@@ -89,18 +89,6 @@ nav .cart {
   display: flex;
   position: relative;
 }
-nav .cart:hover ~ .cart::after {
-  visibility: visible;
-}
-nav .cart::after {
-  content: "";
-  background-color: rgba(162, 95, 75, 0.3);
-  border: 1px solid transparent;
-  width: 88px;
-  position: absolute;
-  top: 52px;
-  visibility: hidden;
-}
 nav .cart__img {
   width: 16px;
   height: 20px;
@@ -128,7 +116,7 @@ nav .cart__counter .text {
   padding-left: 2px;
 }
 
-.alllist-button {
+.allList-button {
   padding: 0px 25px;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -138,7 +126,7 @@ nav .cart__counter .text {
   cursor: pointer;
 }
 
-.upspace {
+.upSpace {
   text-transform: uppercase;
   letter-spacing: 2px;
 }
@@ -151,7 +139,7 @@ nav .cart__counter .text {
   margin-top: 17vh;
 }
 
-.backcoloring {
+.backColoring {
   background-color: #050827;
 }
 
@@ -205,7 +193,7 @@ nav .cart__counter .text {
   background-color: white;
   margin: 25vh 25vw;
   position: fixed;
-  overflow-y: hidden;
+  overflow-y: scroll;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
