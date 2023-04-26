@@ -7,9 +7,8 @@ const backShopButton = document.getElementsByClassName('return');
 const itemsLotsContainer = document.getElementsByClassName('itemsList')[0];
 const addToCart = document.getElementsByClassName('addToCart');
 const clearCartButton = document.getElementsByClassName('clearCart')[0];
-const numberOfItem = document.getElementsByClassName('numberOfItem');
 
-const inCart = []; 
+const inCart = [];
 
 // Cart interactions
 
@@ -23,9 +22,9 @@ function closeCart() {
 }
 
 function countAllItemsInCart() {
-  const selectedItemsNumbers = Array.from(document.getElementsByClassName('numberOfItem'));
+  const selectedItemsNumbers = inCart.map((each) => each.amount);
   const counterNum = selectedItemsNumbers.reduce(
-    (accumulator, currentValue) => accumulator + (+currentValue.textContent),
+    (accumulator, currentValue) => accumulator + currentValue,
     0,
   );
 
@@ -34,25 +33,32 @@ function countAllItemsInCart() {
 }
 
 function sumAllItemsPriceInCart() {
-  const selectedItemsPrices = Array.from(document.getElementsByClassName('item_actPrice'));
+  const selectedItemsPrices = inCart.map((each) => each.priceOfAll);
   const counterNum = selectedItemsPrices.reduce(
-    (accumulator, currentValue) => accumulator + (+currentValue.textContent),
+    (accumulator, currentValue) => accumulator + currentValue,
     0,
   );
 
   document.getElementById('priceSum').innerHTML = `${counterNum}`;
 }
 
-function calculateSameItemsPrice(id, numberItems) {
-  const priceCalculation = store[id - 1].actualPrice * numberItems;
+function calculateSameItemsPrice(id) {
   const price = document.querySelector(`#item_actPrice${id}`);
-  price.innerHTML = priceCalculation;
+  inCart.forEach((each) => {
+    if (id === each.id) {
+      const currentItem = each;
+      const calculatedPrice = currentItem.price * currentItem.amount;
+      price.innerHTML = calculatedPrice;
+      currentItem.priceOfAll = calculatedPrice;
+    }
+  });
 }
 
 function clearCart() {
   const itemsInCart = document.querySelectorAll('.item');
-  if (itemsInCart.length !== 0) {
+  if (inCart.length !== 0) {
     Array.from(itemsInCart).forEach((each) => { each.remove(); });
+    inCart.splice(0, inCart.length);
   }
   countAllItemsInCart();
   sumAllItemsPriceInCart();
@@ -70,7 +76,7 @@ function addOneOfTheseItem(event) {
         currentItem.amount = counter;
       }
 
-      calculateSameItemsPrice(each.id, +each.textContent);
+      calculateSameItemsPrice(each.id);
     }
   });
   countAllItemsInCart();
@@ -83,7 +89,7 @@ function removeOneOfTheseItem(event) {
       const counter = each.amount - 1;
       if (counter === 0) {
         document.querySelector(`#item${each.id}`).remove();
-        inCart.splice((inCart.indexOf(each) - 1), 1);
+        inCart.splice(inCart.indexOf(each), 1);
       } else {
         document.querySelector(`#amount${each.id}`).innerHTML = counter;
         const currentItem = each;
@@ -91,8 +97,7 @@ function removeOneOfTheseItem(event) {
       }
 
       if (document.getElementById(`item${+event.currentTarget.id}`) ) {
-        alert ("calculate price!");
-        //calculateSameItemsPrice(each.id, +each.textContent);
+        calculateSameItemsPrice(each.id);
       }
     }
   });
@@ -151,6 +156,8 @@ function addItemToCart(event) {
             inCart.push({
               id: item.id,
               amount: 1,
+              price: item.actualPrice,
+              priceOfAll: item.actualPrice,
             });
           }
         });
@@ -177,11 +184,3 @@ addEventListeners();
 
 // TODO: try to calculate allItems price on every btn click, as separate variable(const allItemsPrice).
 // It will reduce the forEach loops and dom manipulation
-// Create kind of array cartItems = [ { id, amount, price } ] and modify it and then depend on it modify the dom
-// const cartItems = [
-//   {
-//     id,
-//     amount,
-//     price
-//   }
-// ];
