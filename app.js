@@ -9,6 +9,8 @@ const addToCart = document.getElementsByClassName('addToCart');
 const clearCartButton = document.getElementsByClassName('clearCart')[0];
 const numberOfItem = document.getElementsByClassName('numberOfItem');
 
+const inCart = []; 
+
 // Cart interactions
 
 function openCart(e) {
@@ -57,13 +59,15 @@ function clearCart() {
 }
 
 function addOneOfTheseItem(event) {
-  Array.from(numberOfItem).forEach((each) => {
-    if (event.currentTarget.id === each.id) {
-      const counter = +each.textContent + 1;
+  inCart.forEach((each) => {
+    if (+event.currentTarget.id === each.id) {
+      const counter = each.amount + 1;
       if (counter > store[each.id - 1].amountOfProduct) {
         alert('Sorry the number of available product is limited!');
       } else {
-        each.innerHTML = counter;
+        document.getElementById(`amount${each.id}`).innerHTML = counter;
+        const currentItem = each;
+        currentItem.amount = counter;
       }
 
       calculateSameItemsPrice(each.id, +each.textContent);
@@ -74,15 +78,21 @@ function addOneOfTheseItem(event) {
 }
 
 function removeOneOfTheseItem(event) {
-  Array.from(numberOfItem).forEach((each) => {
-    if (event.currentTarget.id === each.id) {
-      const counter = +each.textContent - 1;
+  inCart.forEach((each) => {
+    if (+event.currentTarget.id === each.id) {
+      const counter = each.amount - 1;
       if (counter === 0) {
         document.querySelector(`#item${each.id}`).remove();
-      } else { each.innerHTML = counter; }
+        inCart.splice((inCart.indexOf(each) - 1), 1);
+      } else {
+        document.querySelector(`#amount${each.id}`).innerHTML = counter;
+        const currentItem = each;
+        currentItem.amount = counter;
+      }
 
-      if (document.getElementById(`item${+event.currentTarget.id}`) !== null) {
-        calculateSameItemsPrice(each.id, +each.textContent);
+      if (document.getElementById(`item${+event.currentTarget.id}`) ) {
+        alert ("calculate price!");
+        //calculateSameItemsPrice(each.id, +each.textContent);
       }
     }
   });
@@ -132,12 +142,16 @@ function addItemToCart(event) {
                                       <p class="item_actPrice" id="item_actPrice${item.id}">${item.actualPrice}</p>
                                       <div class="item_counter"> 
                                           <button class="counterButton addThisItem" id="${item.id}" >+</button>
-                                          <p class="numberOfItem" id="${item.id}">1</p>
+                                          <p class="numberOfItem" id="amount${item.id}">1</p>
                                           <button class="counterButton removeThisItem" id="${item.id}">-</button>     
                                       </div>
                                   </div>
                               `;
             addEListenersToCart();
+            inCart.push({
+              id: item.id,
+              amount: 1,
+            });
           }
         });
       }
