@@ -137,8 +137,8 @@ function addItemToCart(event) {
           if (item.id === +theTarget) {
             itemsLotsContainer.innerHTML += `
                               <div class="item" id="item${item.id}">
-                                      <img height="40px" width="38px" src=".${item.img}" alt="${item.name}"" class="cartImg">
-                                      <h1 class="item_name">${item.name}"</h1>
+                                      <img height="40px" width="38px" src=".${item.img}" alt="${item.name}" class="cartImg">
+                                      <h1 class="item_name text text_articleHead">${item.name}</h1>
                                       <p class="item_actPrice" id="item_actPrice${item.id}">${item.actualPrice}</p>
                                       <div class="item_counter"> 
                                           <button class="counterButton addThisItem" id="${item.id}" >+</button>
