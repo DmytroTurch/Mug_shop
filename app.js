@@ -2,8 +2,7 @@
 
 const productLots = document.getElementById('lotsRender');
 const cartButton = document.getElementsByClassName('cart');
-const cartPop = document.getElementsByClassName('cartPop');
-const backShopButton = document.getElementsByClassName('return');
+const cartPop = document.getElementsByClassName('cartPop')[0];
 const itemsLotsContainer = document.getElementsByClassName('itemsList')[0];
 const addToCart = document.getElementsByClassName('addToCart');
 const clearCartButton = document.getElementsByClassName('clearCart')[0];
@@ -13,12 +12,14 @@ const inCart = [];
 // Cart interactions
 
 function openCart(e) {
-  cartPop[0].classList.add('open');
+  cartPop.classList.add('open');
   e.preventDefault();
 }
 
-function closeCart() {
-  cartPop[0].classList.remove('open');
+function closeCart(event) {
+  if (event.target === cartPop) {
+    cartPop.classList.remove('open');
+  }
 }
 
 function countAllItemsInCart() {
@@ -166,7 +167,7 @@ function addItemToCart(event) {
 
 function addEventListeners() {
   cartButton[0].addEventListener('click', openCart);
-  backShopButton[0].addEventListener('click', closeCart);
+  cartPop.addEventListener('click', closeCart);
   clearCartButton.addEventListener('click', clearCart);
 
   Array.from(addToCart).forEach((each) => { each.addEventListener('click', addItemToCart); });
