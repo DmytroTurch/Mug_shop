@@ -22,10 +22,8 @@ function closeCart() {
 }
 
 function countAllItemsInCart() {
-  // FIXME: Optimize selectedItemsNumbers and counterNum? use only one reduce
-  const selectedItemsNumbers = inCart.map((each) => each.amount);
-  const counterNum = selectedItemsNumbers.reduce(
-    (accumulator, currentValue) => accumulator + currentValue,
+  const counterNum = inCart.reduce(
+    (accumulator, currentValue) => accumulator + currentValue.amount,
     0,
   );
 
@@ -34,10 +32,8 @@ function countAllItemsInCart() {
 }
 
 function sumAllItemsPriceInCart() {
-  // FIXME: Optimize selectedItemsNumbers and counterNum?u se only one reduce
-  const selectedItemsPrices = inCart.map((each) => each.priceOfAll);
-  const counterNum = selectedItemsPrices.reduce(
-    (accumulator, currentValue) => accumulator + currentValue,
+  const counterNum = inCart.reduce(
+    (accumulator, currentValue) => accumulator + (currentValue.amount * currentValue.price),
     0,
   );
 
@@ -46,13 +42,10 @@ function sumAllItemsPriceInCart() {
 
 function calculateSameItemsPrice(id) {
   const price = document.querySelector(`#item_actPrice${id}`);
-  // FIXME: why do you need currentItem var?
   inCart.forEach((each) => {
     if (id === each.id) {
-      const currentItem = each;
-      const calculatedPrice = currentItem.price * currentItem.amount;
+      const calculatedPrice = each.price * each.amount;
       price.innerHTML = calculatedPrice;
-      currentItem.priceOfAll = calculatedPrice;
     }
   });
 }
@@ -68,20 +61,17 @@ function clearCart() {
 }
 
 function addOneOfTheseItem(event) {
-  // FIXME: FIXME: FIXME: Rename each in forEach to item everywhere
-  inCart.forEach((each) => {
-    if (+event.currentTarget.id === each.id) {
-      const counter = each.amount + 1;
-      if (counter > store[each.id - 1].amountOfProduct) {
+  inCart.forEach((item) => {
+    if (+event.currentTarget.id === item.id) {
+      const counter = item.amount + 1;
+      if (counter > store[item.id - 1].amountOfProduct) {
         alert('Sorry the number of available product is limited!');
       } else {
-        document.getElementById(`amount${each.id}`).innerHTML = counter;
-        // FIXME: why do you need currentItem var?
-        const currentItem = each;
-        currentItem.amount = counter;
+        document.getElementById(`amount${item.id}`).innerHTML = counter;
+        item.amount = counter;
       }
 
-      calculateSameItemsPrice(each.id);
+      calculateSameItemsPrice(item.id);
     }
   });
   countAllItemsInCart();
@@ -89,21 +79,19 @@ function addOneOfTheseItem(event) {
 }
 
 function removeOneOfTheseItem(event) {
-  inCart.forEach((each) => {
-    if (+event.currentTarget.id === each.id) {
-      const counter = each.amount - 1;
+  inCart.forEach((item) => {
+    if (+event.currentTarget.id === item.id) {
+      const counter = item.amount - 1;
       if (counter === 0) {
-        document.querySelector(`#item${each.id}`).remove();
-        inCart.splice(inCart.indexOf(each), 1);
+        document.querySelector(`#item${item.id}`).remove();
+        inCart.splice(inCart.indexOf(item), 1);
       } else {
-        document.querySelector(`#amount${each.id}`).innerHTML = counter;
-        // FIXME: why do you need currentItem var?
-        const currentItem = each;
-        currentItem.amount = counter;
+        document.querySelector(`#amount${item.id}`).innerHTML = counter;
+        item.amount = counter;
       }
 
       if (document.getElementById(`item${+event.currentTarget.id}`) ) {
-        calculateSameItemsPrice(each.id);
+        calculateSameItemsPrice(item.id);
       }
     }
   });
@@ -163,9 +151,6 @@ function addItemToCart(event) {
               id: item.id,
               amount: 1,
               price: item.actualPrice,
-              // FIXME: You don't need price of all it is redundant information
-              // you can always calculate it in any place
-              priceOfAll: item.actualPrice,
             });
           }
         });
