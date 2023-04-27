@@ -210,11 +210,13 @@ nav {
     width: 50vw;
     background-color: white;
 
+    border-radius: 20px;
+
     margin: 25vh 25vw;
 
     position: fixed;
     
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
@@ -256,7 +258,7 @@ nav {
     display: flex;
     width: 100%;
     height: 100%;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 }
 
