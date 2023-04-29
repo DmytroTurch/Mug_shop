@@ -15,7 +15,9 @@ h1, h2, h3, h4, p, a {
     margin: 0px;
     padding: 0px;
     text-decoration: none;
+    color: black;
 }
+
 
 .text {
     font-family: 'Karla', sans-serif;
@@ -297,6 +299,10 @@ nav {
 }
 
 .addToCart {
+    cursor: pointer;
+    border: none;
+    offset: none;
+
     width: 40px;
     height: 40px;
     background-color: rgba(162, 95, 75, 1.0);
@@ -304,9 +310,36 @@ nav {
     display: flex;
     bottom: 410px;
     left: 15px;
-    border-radius: 100%;
+    border-radius: 20px;
     justify-content: center;
     align-items: center;
     z-index: 5;
+    
+    transition: 0.5s;
+
+    img {
+        position:absolute;
+        top: 8px;
+        left: 8px;
+    }
+
+    .addToCartText {
+        opacity: 0;
+        position:absolute;
+        left: 40px;
+        width: 80px;
+    
+    }
+
+    &:hover {
+        transition: 0.5s;
+        width: 140px;
+         
+    
+        .addToCartText {
+            transition: opacity 0.25s 0.3s;
+            opacity: 1;
+        }
+    }
 }
 

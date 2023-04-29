@@ -91,7 +91,7 @@ function removeOneOfTheseItem(event) {
         item.amount = counter;
       }
 
-      if (document.getElementById(`item${+event.currentTarget.id}`) ) {
+      if (document.getElementById(`item${+event.currentTarget.id}`)) {
         calculateSameItemsPrice(item.id);
       }
     }
@@ -105,7 +105,7 @@ function removeOneOfTheseItem(event) {
 function renderSlots() {
   store.forEach((item) => {
     productLots.innerHTML += `
-            <div class="shopLot">
+            <div class="shopLot" id="${item.id}">
                 <img src=".${item.img}" alt="${item.name}" class="itemPicture">
                 <h3 class="text text_black text_name">${item.name}</h3>
                 <h3 class="price text text_black text_mid">
@@ -113,7 +113,10 @@ function renderSlots() {
                     <span class="newPrice">${item.discountPrice}</span>
                     <span class="oldPrice">${item.oldPrice}</span>
                 </h3>
-                <a  id="${item.id}" class="addToCart" href="#"><img src="./images/addToCartIcon.png"></a>
+                <button id="${item.id}" class="addToCart" href="#">
+                  <img class='addToCartImg' id="${item.id}addToCartImg" src="./images/addToCartIcon.png">
+                  <p class="addToCartText text"> Add to cart </p>
+                </button>
             </div>
             `;
   });
@@ -131,11 +134,9 @@ function addItemToCart(event) {
   const theTarget = event.currentTarget.id;
   const thisItem = document.getElementById(`item${theTarget}`);
   if (!thisItem) {
-    Array.from(addToCart).forEach((each) => {
-      if (+each.id === +theTarget) {
-        store.forEach((item) => {
-          if (item.id === +theTarget) {
-            itemsLotsContainer.innerHTML += `
+    store.forEach((item) => {
+      if (item.id === +theTarget) {
+        itemsLotsContainer.innerHTML += `
                               <div class="item" id="item${item.id}">
                                       <img height="40px" width="38px" src=".${item.img}" alt="${item.name}" class="cartImg">
                                       <h1 class="item_name text text_articleHead">${item.name}</h1>
@@ -147,13 +148,11 @@ function addItemToCart(event) {
                                       </div>
                                   </div>
                               `;
-            addEListenersToCart();
-            inCart.push({
-              id: item.id,
-              amount: 1,
-              price: item.actualPrice,
-            });
-          }
+        addEListenersToCart();
+        inCart.push({
+          id: item.id,
+          amount: 1,
+          price: item.actualPrice,
         });
       }
     });
