@@ -54,7 +54,7 @@ function calculateSameItemsPrice(id) {
 function clearCart() {
   const itemsInCart = document.querySelectorAll('.item');
   if (inCart.length !== 0) {
-    Array.from(itemsInCart).forEach((each) => { each.remove(); });
+    Array.from(itemsInCart, (item) => item.remove());
     inCart.splice(0, inCart.length);
   }
   countAllItemsInCart();
@@ -123,11 +123,8 @@ function renderSlots() {
 }
 
 function addEListenersToCart() {
-  const addButton = Array.from(document.getElementsByClassName('addThisItem'));
-  const removeButton = Array.from(document.getElementsByClassName('removeThisItem'));
-
-  addButton.forEach((each) => { each.addEventListener('click', addOneOfTheseItem); });
-  removeButton.forEach((each) => { each.addEventListener('click', removeOneOfTheseItem); });
+  Array.from(document.getElementsByClassName('addThisItem'), (plus) => plus.addEventListener('click', addOneOfTheseItem));
+  Array.from(document.getElementsByClassName('removeThisItem'), (minus) => minus.addEventListener('click', removeOneOfTheseItem));
 }
 
 function addItemToCart(event) {
@@ -169,7 +166,7 @@ function addEventListeners() {
   cartPop.addEventListener('click', closeCart);
   clearCartButton.addEventListener('click', clearCart);
 
-  Array.from(addToCart).forEach((each) => { each.addEventListener('click', addItemToCart); });
+  Array.from(addToCart, (button) => button.addEventListener('click', addItemToCart));
 }
 
 renderSlots();
