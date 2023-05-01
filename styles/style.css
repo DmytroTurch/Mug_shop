@@ -81,10 +81,31 @@ nav ul {
   padding: 0px;
 }
 nav ul li {
+  top: -50px;
+  z-index: 2;
+  position: relative;
   padding-right: 30px;
 }
 nav ul li:last-child {
   padding: 0px;
+}
+nav ul li.first {
+  animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 0s forwards;
+}
+nav ul li.second {
+  animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 0.5s forwards;
+}
+nav ul li.third {
+  animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 1s forwards;
+}
+nav ul li.forth {
+  animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 1.5s forwards;
+}
+nav ul li.fifth {
+  animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 2s forwards;
+}
+nav ul li.sixth {
+  animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 2.5s forwards;
 }
 nav .cart {
   z-index: 5;
@@ -184,6 +205,7 @@ nav .cart__counter .text {
   height: 100%;
   background-color: rgba(162, 95, 75, 0.3);
   opacity: 0;
+  z-index: 1;
 }
 .cartPop.open {
   opacity: 1;
@@ -201,7 +223,7 @@ nav .cart__counter .text {
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3215686275);
-  z-index: 6;
+  z-index: 3;
 }
 
 .item {
@@ -304,4 +326,10 @@ nav .cart__counter .text {
 .addToCart:hover .addToCartText {
   transition: opacity 0.25s 0.3s;
   opacity: 1;
+}
+
+@keyframes menu_buttons {
+  100% {
+    top: 0px;
+  }
 }/*# sourceMappingURL=style.css.map */

@@ -69,7 +69,7 @@ h1, h2, h3, h4, p, a {
     }
 }
 
-//Навігація 
+//Navigation 
 
 nav {
     display: flex;
@@ -92,10 +92,32 @@ nav {
         margin: 31px 50px 0px 0px;
         padding: 0px;
         li {
+            top:-50px;
+            z-index: 2;
+            position: relative;
             padding-right:30px;
             &:last-child{
                 padding: 0px;
             }
+            &.first{
+                animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 0s forwards;
+            }
+            &.second{
+                animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 0.5s forwards;
+            }
+            &.third{
+                animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 1s forwards;
+            }
+            &.forth{
+                animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 1.5s forwards;
+            }
+            &.fifth{
+                animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 2s forwards;
+            }
+            &.sixth{
+                animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 2.5s forwards;
+            }
+            
         }
     }
     .cart{
@@ -202,7 +224,7 @@ nav {
     height: 100%;
     background-color: rgba(162, 95, 75, 0.3);
     opacity: 0;
-    
+    z-index: 1;
     &.open {
         
         opacity: 1;
@@ -228,7 +250,7 @@ nav {
     flex-direction: column;
 
     box-shadow: 0 8px 40px #00000052;
-    z-index: 6;
+    z-index: 3;
 }
 
 .item {
@@ -345,3 +367,9 @@ nav {
     }
 }
 
+//navigation animation
+@keyframes menu_buttons {
+    100%{
+        top:0px;
+    }
+}
