@@ -1,6 +1,6 @@
 //  Elements from DOM
 
-const productLots = document.getElementById('lotsRender');
+const productSlots = document.getElementById('lotsRender');
 const cartButton = document.getElementsByClassName('cart');
 const cartPop = document.getElementsByClassName('cartPop')[0];
 const itemsLotsContainer = document.getElementsByClassName('itemsList')[0];
@@ -9,6 +9,19 @@ const clearCartButton = document.getElementsByClassName('clearCart')[0];
 
 const inCart = [];
 
+// sorting functions
+function sortFromChip() {
+  store.sort((a, b) => a.actualPrice - b.actualPrice);
+  productSlots.innerHTML = '';
+  renderSlots();
+}
+
+function sortFromExp() {
+  store.sort((a, b) => b.actualPrice - a.actualPrice);
+  productSlots.innerHTML = '';
+  renderSlots();
+}
+// -----------------
 // Cart interactions
 
 function openCart(e) {
@@ -104,7 +117,7 @@ function removeOneOfTheseItem(event) {
 
 function renderSlots() {
   store.forEach((item) => {
-    productLots.innerHTML += `
+    productSlots.innerHTML += `
             <div class="shopLot" id="${item.id}">
                 <img src=".${item.img}" alt="${item.name}" class="itemPicture">
                 <h3 class="text text_black text_name">${item.name}</h3>
