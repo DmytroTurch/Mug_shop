@@ -11,6 +11,7 @@
         "ecmaVersion": "latest"
     },
     "rules": {
-        "no-param-reassign": "off"
+        "no-param-reassign": "off",
+        "linebreak-style": "windows"
     }
 }

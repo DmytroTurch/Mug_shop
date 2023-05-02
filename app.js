@@ -12,6 +12,7 @@ const inCart = [];
 
 // Cart interactions
 
+// FIXME: What is this e? Name parameters with meaning everywhere.
 function openCart(e) {
   cartPop.classList.add('open');
   e.preventDefault();
@@ -46,6 +47,7 @@ function calculateSameItemsPrice(id) {
   const price = document.querySelector(`#item_actPrice${id}`);
   inCart.forEach((each) => {
     if (id === each.id) {
+      // FIXME: Do you need this var?
       const calculatedPrice = each.price * each.amount;
       price.innerHTML = calculatedPrice;
     }
@@ -54,7 +56,9 @@ function calculateSameItemsPrice(id) {
 
 function clearCart() {
   const itemsInCart = document.querySelectorAll('.item');
-  if (inCart.length !== 0) {
+
+  // FIXME: How to improve this checking
+  if (inCart.length) {
     Array.from(itemsInCart, (item) => item.remove());
     inCart.splice(0, inCart.length);
   }
@@ -63,6 +67,8 @@ function clearCart() {
 }
 
 function addOneOfTheseItem(event) {
+  // FIXME: Replace item with object destruction approach? { id, amount  }
+  // It is good practice if there are only several properties used
   inCart.forEach((item) => {
     if (+event.currentTarget.id === item.id) {
       const counter = item.amount + 1;
@@ -162,6 +168,7 @@ function addItemToCart(event) {
   event.preventDefault();
 }
 
+// FIXME: Don't these three sort functions look the same? What part is different?
 // sorting functions
 function sortFromChip() {
   store.sort((a, b) => a.actualPrice - b.actualPrice);
@@ -184,6 +191,7 @@ function sortAmount() {
 function sortSize() {
   store.sort((a, b) => {
     const compStr = `${a.size} - ${b.size}`;
+    // FIXME: Improve this checking with using array.includes()
     if (compStr === 'S - M' || compStr === 'M - L' || compStr === 'S - L') {
       console.log(`${compStr} result -1`);
       return -1;
