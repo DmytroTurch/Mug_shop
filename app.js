@@ -175,6 +175,12 @@ function sortFromExp() {
   renderSlots();
 }
 
+function sortAmount() {
+  store.sort((a, b) => b.amountOfProduct - a.amountOfProduct);
+  productSlots.innerHTML = '';
+  renderSlots();
+}
+
 function sortSize() {
   store.sort((a, b) => {
     const compStr = `${a.size} - ${b.size}`;
@@ -201,6 +207,8 @@ function chooseSortingMethod(e) {
       sortFromExp();
     } else if (e.target.value === 'bySize') {
       sortSize();
+    } else if (e.target.value === 'byAmount') {
+      sortAmount();
     }
   }
 }
