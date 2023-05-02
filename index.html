@@ -66,7 +66,15 @@
 
     <div class="content products">
         <h1 class="sectionheader"></h1>
-        <div class="section" id="lotsRender"></div>
+        <div class="wrapperSortingButtons">
+            <p class="text">Sort by: </p> 
+            <select name="sortingMethod" id="sortingMethod">
+                <option value="default">---select method---</option>
+                <option value="byPriceFromLow"> price from low to high</option>
+                <option value="byPriceFromHigh"> price from high to low</option>
+            </select>
+        </div>
+        <div class="section" id="slotsRender"></div>
     </div>
 
     <div class="cartPop">
