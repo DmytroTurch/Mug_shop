@@ -1,11 +1,12 @@
 //  Elements from DOM
 
-const productSlots = document.getElementById('lotsRender');
+const productSlots = document.getElementById('slotsRender');
 const cartButton = document.getElementsByClassName('cart');
 const cartPop = document.getElementsByClassName('cartPop')[0];
 const itemsLotsContainer = document.getElementsByClassName('itemsList')[0];
 const addToCart = document.getElementsByClassName('addToCart');
 const clearCartButton = document.getElementsByClassName('clearCart')[0];
+const currentSortingMethod = document.getElementById('sortingMethod').value;
 
 const inCart = [];
 
@@ -20,6 +21,16 @@ function sortFromExp() {
   store.sort((a, b) => b.actualPrice - a.actualPrice);
   productSlots.innerHTML = '';
   renderSlots();
+}
+
+function chooseSortingMethod(e) {
+  if (!(currentSortingMethod === e.target.value)) {
+    if (e.target.value === 'byPriceFromLow') {
+      sortFromChip();
+    } else if (e.target.value === 'byPriceFromHigh') {
+      sortFromExp();
+    }
+  }
 }
 // -----------------
 // Cart interactions
@@ -180,6 +191,8 @@ function addEventListeners() {
   clearCartButton.addEventListener('click', clearCart);
 
   Array.from(addToCart, (button) => button.addEventListener('click', addItemToCart));
+
+  document.querySelector('#sortingMethod').addEventListener('change', chooseSortingMethod);
 }
 
 renderSlots();
