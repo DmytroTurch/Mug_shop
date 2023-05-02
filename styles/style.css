@@ -179,6 +179,7 @@ nav .cart__counter .text {
   row-gap: 70px;
   width: 100%;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .shopLot {
@@ -326,6 +327,18 @@ nav .cart__counter .text {
 .addToCart:hover .addToCartText {
   transition: opacity 0.25s 0.3s;
   opacity: 1;
+}
+
+.wrapperSortingButtons {
+  width: 100%;
+  height: 100px;
+  padding: 20px;
+  background-color: aqua;
+  z-index: 3;
+}
+
+#sortingMethod {
+  z-index: 3;
 }
 
 @keyframes menu_buttons {
