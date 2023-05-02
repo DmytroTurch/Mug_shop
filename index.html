@@ -66,14 +66,16 @@
 
     <div class="content products">
         <h1 class="sectionheader"></h1>
-        <div class="wrapperSortingButtons">
-            <p class="text">Sort by: </p> 
-            <select name="sortingMethod" id="sortingMethod">
-                <option value="default">---select method---</option>
-                <option value="byPriceFromLow"> price from low to high</option>
-                <option value="byPriceFromHigh"> price from high to low</option>
-                <option value="bySize">size</option>
-            </select>
+        <div class="wrapperSortingSelector">
+            <div class="sortingSelector">   
+                <p class="text">Sort by: </p> 
+                <select name="sortingMethod" id="sortingMethod">
+                    <option value="default">---select method---</option>
+                    <option value="byPriceFromLow"> price from low to high</option>
+                    <option value="byPriceFromHigh"> price from high to low</option>
+                    <option value="bySize">size</option>
+                </select>
+            </div> 
         </div>
         <div class="section" id="slotsRender"></div>
     </div>

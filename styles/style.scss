@@ -368,12 +368,15 @@ nav {
     }
 }
 
-.wrapperSortingButtons {
+.wrapperSortingSelector {
     width: 100%;
-    height: 100px;
-    padding: 20px;
-    background-color: aqua;
     z-index: 3;
+}
+
+.sortingSelector {
+    padding: 20px;
+    display:flex;
+    align-items: center;
 }
 
 #sortingMethod {
