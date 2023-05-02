@@ -10,29 +10,6 @@ const currentSortingMethod = document.getElementById('sortingMethod').value;
 
 const inCart = [];
 
-// sorting functions
-function sortFromChip() {
-  store.sort((a, b) => a.actualPrice - b.actualPrice);
-  productSlots.innerHTML = '';
-  renderSlots();
-}
-
-function sortFromExp() {
-  store.sort((a, b) => b.actualPrice - a.actualPrice);
-  productSlots.innerHTML = '';
-  renderSlots();
-}
-
-function chooseSortingMethod(e) {
-  if (!(currentSortingMethod === e.target.value)) {
-    if (e.target.value === 'byPriceFromLow') {
-      sortFromChip();
-    } else if (e.target.value === 'byPriceFromHigh') {
-      sortFromExp();
-    }
-  }
-}
-// -----------------
 // Cart interactions
 
 function openCart(e) {
@@ -184,6 +161,50 @@ function addItemToCart(event) {
   sumAllItemsPriceInCart();
   event.preventDefault();
 }
+
+// sorting functions
+function sortFromChip() {
+  store.sort((a, b) => a.actualPrice - b.actualPrice);
+  productSlots.innerHTML = '';
+  renderSlots();
+}
+
+function sortFromExp() {
+  store.sort((a, b) => b.actualPrice - a.actualPrice);
+  productSlots.innerHTML = '';
+  renderSlots();
+}
+
+function sortSize() {
+  store.sort((a, b) => {
+    const compStr = `${a.size} - ${b.size}`;
+    if (compStr === 'S - M' || compStr === 'M - L' || compStr === 'S - L') {
+      console.log(`${compStr} result -1`);
+      return -1;
+    }
+    if (compStr === 'M - S' || compStr === 'L - M' || compStr === 'L - S') {
+      console.log(`${compStr} result 1`);
+      return 1;
+    }
+    console.log(`${compStr} result 0`);
+    return 0;
+  });
+  productSlots.innerHTML = '';
+  renderSlots();
+}
+
+function chooseSortingMethod(e) {
+  if (!(currentSortingMethod === e.target.value)) {
+    if (e.target.value === 'byPriceFromLow') {
+      sortFromChip();
+    } else if (e.target.value === 'byPriceFromHigh') {
+      sortFromExp();
+    } else if (e.target.value === 'bySize') {
+      sortSize();
+    }
+  }
+}
+// -----------------
 
 function addEventListeners() {
   cartButton[0].addEventListener('click', openCart);

@@ -9,6 +9,7 @@ const store = [
     oldPrice: 37.00,
     actualPrice: 25.00,
     amountOfProduct: 10,
+    size: 'M',
   },
 
   {
@@ -21,6 +22,7 @@ const store = [
     oldPrice: `$${19.00}USD`,
     actualPrice: 15.00,
     amountOfProduct: 15,
+    size: 'M',
   },
 
   {
@@ -33,6 +35,7 @@ const store = [
     oldPrice: '',
     actualPrice: 19.00,
     amountOfProduct: 10,
+    size: 'S',
   },
 
   {
@@ -45,6 +48,7 @@ const store = [
     oldPrice: '',
     actualPrice: 25.00,
     amountOfProduct: 30,
+    size: 'L',
   },
 
   {
@@ -57,6 +61,7 @@ const store = [
     oldPrice: '',
     actualPrice: 46.00,
     amountOfProduct: 10,
+    size: 'M',
   },
 
   {
@@ -69,6 +74,7 @@ const store = [
     oldPrice: '',
     actualPrice: 34.00,
     amountOfProduct: 10,
+    size: 'S',
   },
 
   {
@@ -81,6 +87,7 @@ const store = [
     oldPrice: '',
     actualPrice: 25.00,
     amountOfProduct: 10,
+    size: 'L',
   },
 
   {
@@ -93,6 +100,7 @@ const store = [
     oldPrice: '',
     actualPrice: 25.00,
     amountOfProduct: 10,
+    size: 'S',
   },
 
   {
@@ -105,5 +113,6 @@ const store = [
     oldPrice: '',
     actualPrice: 25.00,
     amountOfProduct: 10,
+    size: 'L',
   },
 ];
