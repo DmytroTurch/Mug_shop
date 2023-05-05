@@ -59,8 +59,12 @@ h1, h2, h3, h4, p, a {
 }
 
 nav {
+  margin-top: 25px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 90px;
+  max-width: 940px;
 }
 nav .text {
   font-size: 12px;
@@ -71,20 +75,13 @@ nav .text {
 nav .logo {
   width: 112px;
   height: 24px;
-  margin-right: 97px;
-  margin-top: 28px;
 }
 nav ul {
+  margin: 0px;
   display: flex;
   list-style: none;
-  margin: 31px 50px 0px 0px;
   padding: 0px;
-}
-nav ul li {
-  top: -50px;
-  z-index: 2;
-  position: relative;
-  padding-right: 30px;
+  gap: 30px;
 }
 nav ul li:last-child {
   padding: 0px;
@@ -108,22 +105,15 @@ nav ul li.sixth {
   animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 2.5s forwards;
 }
 nav .cart {
-  z-index: 5;
   display: flex;
-  position: relative;
+  align-items: center;
+  gap: 5px;
 }
 nav .cart__img {
   width: 16px;
   height: 20px;
-  margin-right: 10px;
-  margin-top: 29px;
-}
-nav .cart .text {
-  margin-top: 31px;
-  margin-right: 8px;
 }
 nav .cart__counter {
-  margin-top: 31px;
   width: 20px;
   height: 18px;
   background-color: black;
@@ -205,11 +195,10 @@ nav .cart__counter .text {
   width: 100%;
   height: 100%;
   background-color: rgba(162, 95, 75, 0.3);
-  opacity: 0;
-  z-index: 1;
+  display: none;
 }
 .cartPop.open {
-  opacity: 1;
+  display: block;
 }
 
 .cartPop_content {
@@ -224,7 +213,6 @@ nav .cart__counter .text {
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3215686275);
-  z-index: 3;
 }
 
 .item {
@@ -306,13 +294,12 @@ nav .cart__counter .text {
   border-radius: 20px;
   justify-content: center;
   align-items: center;
-  z-index: 5;
   transition: 0.5s;
 }
 .addToCart img {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 10px;
+  left: 10px;
 }
 .addToCart .addToCartText {
   opacity: 0;
@@ -331,7 +318,6 @@ nav .cart__counter .text {
 
 .wrapperSortingSelector {
   width: 100%;
-  z-index: 3;
 }
 
 .sortingSelector {
@@ -340,10 +326,17 @@ nav .cart__counter .text {
   align-items: center;
 }
 
-#sortingMethod {
-  z-index: 3;
+@media screen and (max-width: 940px) {
+  nav ul {
+    display: none;
+  }
+  nav .logo {
+    margin: 0px;
+  }
+  nav .cart {
+    margin: 0px;
+  }
 }
-
 @keyframes menu_buttons {
   100% {
     top: 0px;
