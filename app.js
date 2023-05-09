@@ -251,10 +251,10 @@ function sortSize() {
   store.sort((a, b) => {
     const compStr = `${a.size} - ${b.size}`;
     // FIXME: Improve this checking with using array.includes()
-    if (compStr === 'S - M' || compStr === 'M - L' || compStr === 'S - L') {
+    if (['S - M', 'M - L', 'S - L'].includes(compStr)) {
       return -1;
     }
-    if (compStr === 'M - S' || compStr === 'L - M' || compStr === 'L - S') {
+    if (['M - S', 'L - M', 'L - S'].includes(compStr)) {
       return 1;
     }
     return 0;
