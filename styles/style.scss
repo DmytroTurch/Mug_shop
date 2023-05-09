@@ -88,13 +88,13 @@ nav {
         width: 112px;
         height: 24px;
     }
-    ul {
+    .menu {
         margin: 0px;
         display: flex;
         list-style: none;
         padding: 0px;
         gap: 30px;
-        li {
+        .menu__button {
         
             &:last-child{
                 padding: 0px;
@@ -120,6 +120,32 @@ nav {
             
         }
     }
+
+
+    .burger-menu_closed {
+        display:none;
+    }
+    .burger-menu_open {
+        display: block;
+    }
+    .burger-menu {
+        list-style: none;
+        padding: 8px;
+        margin: 0px;
+        position: absolute;
+        background-color: #FFF;
+        border: 2px solid #000;
+        .menu__button {
+            padding: 5px;
+            &:first-child {
+                padding-top: 0px;
+            }
+            &:last-child {
+                padding-bottom: 0px;
+            }
+        }
+    }
+
     .cart{
         
         display: flex;
@@ -361,26 +387,67 @@ nav {
     }
 }
 
-.wrapperSortingSelector {
+.wrapper-sorting-selector {
     width: 100%;
 }
 
-.sortingSelector {
+.sorting-selector {
     padding: 20px;
     display:flex;
     align-items: center;
 }
 
-#sortingMethod {
-    
+.render-off {
+    display:none;
 }
 
+.burger-button {
+    width: 50px;
+    height: 50px;
+    border: #1D1F2E solid 2px;
+    border-radius: 15px;
+    box-shadow: inset 1px 1px 5px #1D1F2E;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &:active {
+        box-shadow: inset 1px 1px 10px #1D1F2E;
+    }
+}
+
+.burger-decoration {
+    position: absolute;
+    margin: 0px;
+    width: 30px;
+    height: 5px;
+    background-color:#1D1F2E;
+    &::after{
+        content: "";
+        margin: 0px;
+        width: 30px;
+        height: 5px;
+        background-color:#1D1F2E;
+        position: absolute;
+        top: 10px;
+        right:  0px;
+    }
+    &::before {
+        content: "";
+        margin: 0px;
+        width: 30px;
+        height: 5px;
+        background-color:#1D1F2E;
+        position: absolute;
+        top: -10px;
+        right: 0px;
+    }
+}
 @media screen and (max-width: 940px){
     nav {
-        
-        ul{
-            display:none;
-        }
+
         .logo {
             margin:0px;
         }

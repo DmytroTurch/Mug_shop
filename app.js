@@ -6,9 +6,69 @@ const cartPop = document.getElementsByClassName('cartPop')[0];
 const itemsLotsContainer = document.getElementsByClassName('itemsList')[0];
 const addToCart = document.getElementsByClassName('addToCart');
 const clearCartButton = document.getElementsByClassName('clearCart')[0];
-const currentSortingMethod = document.getElementById('sortingMethod').value;
+const currentSortingMethod = document.getElementById('sorting-method').value;
+
+const mediaQueryMax940 = window.matchMedia('(max-width: 940px)');
+const mediaQueryMin940 = window.matchMedia('(min-width: 940px)');
+
+const burgerRenderPlace = document.querySelector('.burger-render');
+
 
 const inCart = [];
+
+function openBurger(click) {
+  const burgerMenu = document.querySelector('.burger-menu');
+  if (burgerMenu.classList.contains('burger-menu_closed')) {
+    burgerMenu.classList.remove('burger-menu_closed');
+    burgerMenu.classList.add('burger-menu_open');
+    return;
+  }
+  if ((click.target !== burgerMenu) && burgerMenu.classList.contains('burger-menu_open')) {
+    burgerMenu.classList.remove('burger-menu_open');
+    burgerMenu.classList.add('burger-menu_closed');
+    return;
+  }
+}
+
+// media queries
+function renderChanges(mediaObj) {
+  if (mediaObj.matches && (mediaObj.media === '(max-width: 940px)')) {
+    document.querySelector('.menu-render').innerHTML = '';
+    document.querySelector('.menu-render').classList.add('render-off');
+
+    burgerRenderPlace.classList.remove('render-off');
+    burgerRenderPlace.innerHTML = `
+      <button class="burger-button">
+      <div class="burger-decoration"></div>
+      </button>
+      
+      <ul class="burger-menu burger-menu_closed">
+                <li class="menu__button first"><a class="text text_black" href="#">Home</a></li>
+                <li class="menu__button second"><a class="text text_black" href="#">Our Products</a></li>
+                <li class="menu__button third"><a class="text text_black" href="#">Blog</a></li>
+                <li class="menu__button forth"><a class="text text_black" href="#">About</a></li>
+                <li class="menu__button fifth"><a class="text text_black" href="#">Contact</a></li>
+                <li class="menu__button sixth"><a class="text text_black" href="#">StyleGuide</a></li>
+            </ul>`;
+    document.querySelector('.burger-button').addEventListener('click', openBurger);
+  }
+
+  if (mediaObj.matches && (mediaObj.media === '(min-width: 940px)')) {
+    document.querySelector('.menu-render').classList.remove('render-off');
+    document.querySelector('.menu-render').innerHTML = `
+    <ul class="menu">
+                <li class="menu__button first"><a class="text text_black" href="#">Home</a></li>
+                <li class="menu__button second"><a class="text text_black" href="#">Our Products</a></li>
+                <li class="menu__button third"><a class="text text_black" href="#">Blog</a></li>
+                <li class="menu__button forth"><a class="text text_black" href="#">About</a></li>
+                <li class="menu__button fifth"><a class="text text_black" href="#">Contact</a></li>
+                <li class="menu__button sixth"><a class="text text_black" href="#">StyleGuide</a></li>
+            </ul>`;
+    burgerRenderPlace.innerHTML = '';
+    burgerRenderPlace.classList.add('render-off');
+  }
+}
+// -------------
 
 // Cart interactions
 
@@ -121,8 +181,8 @@ function renderSlots() {
                     <span class="oldPrice">${item.oldPrice}</span>
                 </h3>
                 <button id="${item.id}" class="addToCart" href="#">
-                  <img class='addToCartImg' id="${item.id}addToCartImg" src="./images/addToCartIcon.png">
-                  <p class="addToCartText text"> Add to cart </p>
+                  <img class='addToCartImg' id="${item.id}addToCartImg" src="./images/cart.svg" width=20px height=20px>
+                  <p class="addToCartText text text_white"> Add to cart </p>
                 </button>
             </div>
             `;
@@ -168,60 +228,6 @@ function addItemToCart(event) {
   event.preventDefault();
 }
 
-// FIXME: Don't these three sort functions look the same? What part is different?
-// sorting functions
-function sortFromChip() {
-  store.sort((a, b) => a.actualPrice - b.actualPrice);
-  productSlots.innerHTML = '';
-  renderSlots();
-}
-
-function sortFromExp() {
-  store.sort((a, b) => b.actualPrice - a.actualPrice);
-  productSlots.innerHTML = '';
-  renderSlots();
-}
-
-function sortAmount() {
-  store.sort((a, b) => b.amountOfProduct - a.amountOfProduct);
-  productSlots.innerHTML = '';
-  renderSlots();
-}
-
-function sortSize() {
-  store.sort((a, b) => {
-    const compStr = `${a.size} - ${b.size}`;
-    // FIXME: Improve this checking with using array.includes()
-    if (compStr === 'S - M' || compStr === 'M - L' || compStr === 'S - L') {
-      console.log(`${compStr} result -1`);
-      return -1;
-    }
-    if (compStr === 'M - S' || compStr === 'L - M' || compStr === 'L - S') {
-      console.log(`${compStr} result 1`);
-      return 1;
-    }
-    console.log(`${compStr} result 0`);
-    return 0;
-  });
-  productSlots.innerHTML = '';
-  renderSlots();
-}
-
-function chooseSortingMethod(e) {
-  if (!(currentSortingMethod === e.target.value)) {
-    if (e.target.value === 'byPriceFromLow') {
-      sortFromChip();
-    } else if (e.target.value === 'byPriceFromHigh') {
-      sortFromExp();
-    } else if (e.target.value === 'bySize') {
-      sortSize();
-    } else if (e.target.value === 'byAmount') {
-      sortAmount();
-    }
-  }
-}
-// -----------------
-
 function addEventListeners() {
   cartButton[0].addEventListener('click', openCart);
   cartPop.addEventListener('click', closeCart);
@@ -229,8 +235,49 @@ function addEventListeners() {
 
   Array.from(addToCart, (button) => button.addEventListener('click', addItemToCart));
 
-  document.querySelector('#sortingMethod').addEventListener('change', chooseSortingMethod);
+  document.querySelector('#sorting-method').addEventListener('change', chooseSortingMethod);
+
+  mediaQueryMax940.addEventListener('change', renderChanges);
+  mediaQueryMin940.addEventListener('change', renderChanges);
 }
+
+// sorting functions
+
+function sortBy(property, fromLow) {
+  store.sort((a, b) => (fromLow ? a[property] - b[property] : b[property] - a[property]));
+}
+
+function sortSize() {
+  store.sort((a, b) => {
+    const compStr = `${a.size} - ${b.size}`;
+    // FIXME: Improve this checking with using array.includes()
+    if (compStr === 'S - M' || compStr === 'M - L' || compStr === 'S - L') {
+      return -1;
+    }
+    if (compStr === 'M - S' || compStr === 'L - M' || compStr === 'L - S') {
+      return 1;
+    }
+    return 0;
+  });
+}
+
+function chooseSortingMethod(e) {
+  if (!(currentSortingMethod === e.target.value)) {
+    if (e.target.value === 'byPriceFromLow') {
+      sortBy('actualPrice', true);
+    } else if (e.target.value === 'byPriceFromHigh') {
+      sortBy('actualPrice', false);
+    } else if (e.target.value === 'bySize') {
+      sortSize();
+    } else if (e.target.value === 'byAmount') {
+      sortBy('amountOfProduct', true);
+    }
+  }
+  productSlots.innerHTML = '';
+  renderSlots();
+  addEventListeners();
+}
+// -----------------
 
 renderSlots();
 addEventListeners();

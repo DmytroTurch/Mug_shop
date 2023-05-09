@@ -16,16 +16,23 @@
 <body>
     <div class="content">
         <nav>
+            <div class="burger-render render-off">
+
+            </div>
+           
+
             <img class="logo" src="images/logo/logo.png" alt="logo">
 
-            <ul class="menu">
-                <li class="menu__buttons first"><a class="text text_black" href="#">Home</a></li>
-                <li class="menu__buttons second"><a class="text text_black" href="#">Our Products</a></li>
-                <li class="menu__buttons third"><a class="text text_black" href="#">Blog</a></li>
-                <li class="menu__buttons forth"><a class="text text_black" href="#">About</a></li>
-                <li class="menu__buttons fifth"><a class="text text_black" href="#">Contact</a></li>
-                <li class="menu__buttons sixth"><a class="text text_black" href="#">StyleGuide</a></li>
-            </ul>
+            <div class="menu-render">
+                <ul class="menu">
+                    <li class="menu__buttons first"><a class="text text_black" href="#">Home</a></li>
+                    <li class="menu__buttons second"><a class="text text_black" href="#">Our Products</a></li>
+                    <li class="menu__buttons third"><a class="text text_black" href="#">Blog</a></li>
+                    <li class="menu__buttons forth"><a class="text text_black" href="#">About</a></li>
+                    <li class="menu__buttons fifth"><a class="text text_black" href="#">Contact</a></li>
+                    <li class="menu__buttons sixth"><a class="text text_black" href="#">StyleGuide</a></li>
+                </ul>
+            </div>
 
             <a href="#" class="cart" >
                 <img class="cart__img" src="images/logo/bag.svg" alt="bag">
@@ -66,11 +73,10 @@
 
     <div class="content products">
         <h1 class="sectionheader"></h1>
-        <!-- FIXME: Where is BEM for class naming? Use '-' with class naming(class="wrapper-sorting-selector") and upperCase for ids(id="wrapperSortingSelector")-->
-        <div class="wrapperSortingSelector">
-            <div class="sortingSelector">   
+        <div class="wrapper-sorting-selector">
+            <div class="sorting-selector">   
                 <p class="text">Sort by: </p> 
-                <select name="sortingMethod" id="sortingMethod">
+                <select name="sorting-method" id="sorting-method">
                     <option value="default">---select method---</option>
                     <option value="byPriceFromLow"> price from low to high</option>
                     <option value="byPriceFromHigh"> price from high to low</option>
