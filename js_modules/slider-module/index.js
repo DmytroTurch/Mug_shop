@@ -74,7 +74,7 @@ const slider = {
         this.createThumbs(number);
         this.setSectors();
         this.calculateInitScale();
-        this.calculateInitTranslate();
+        this.calcScaleTranslate();
         this.setThumb('all');
 
         console.log(`NumThumbs: ${this.thumb.length}`)
@@ -111,7 +111,7 @@ const slider = {
 
             let index = singleMode ? input : slider.thumb.indexOf(input);
             let overlappedSectors = slider.sector.slice(0, index+1);
-            let offset = overlappedSectors.reduce((acc, next) => acc + next.scale, 0);
+            let offset = overlappedSectors.reduce((acc, next) => acc + next.currentScale, 0);
             let currentElement = document.getElementById(`thumb${slider.ID}${index}`);
             let currentThumb = singleMode ? slider.thumb[input] : input;
 
@@ -134,10 +134,11 @@ const slider = {
         for (let i = 0; i <= this.thumb.length; i++) {
             document.getElementById(`track${this.ID}`).innerHTML += `<div class="sector" id="sector${this.ID}${i}"></div>`
             this.sector[i] = {
-                scale: 0,
+                currentScale: 0,
+                initScale: 0,
                 scaleCSS: undefined,
                 calcScaleCSS() {
-                    this.scaleCSS = `scale(${this.scale}, 1)`
+                    this.scaleCSS = `scale(${this.currentScale}, 1)`
                 },
                 translate: 0,
                 translateCSS: undefined,
@@ -157,12 +158,14 @@ const slider = {
             let index = sectorsArr.indexOf(sector);
             let sectorEl = document.getElementById(`sector${this.ID}${index}`);
             if (sectorEl.id === `sector${this.ID}0` || sectorEl.id === `sector${this.ID}${sectorsArr.length-1}`){
-                sector.scale = 0;
+                sector.initScale = 0;
+                sector.currentScale = sector.initScale;
                 sector.calcScaleCSS();
 
                 sectorEl.setAttribute('style', `transform: ${sectorsArr[index].scaleCSS} ${sectorsArr[index].translateCSS}`)
             } else {
-                sector.scale = initScale;
+                sector.initScale = initScale;
+                sector.currentScale = sector.initScale;
                 sector.calcScaleCSS();
                 sectorEl.setAttribute('style', `transform: ${sectorsArr[index].scaleCSS} ${sectorsArr[index].translateCSS}`)
             }
@@ -171,16 +174,16 @@ const slider = {
     },
 
 
-    calculateInitTranslate() {
+    calcScaleTranslate() {
         const sectorsArr = this.sector;
-        let leftSScalesSum = 0;
+        let leftScalesSum = 0;
         sectorsArr.forEach((sector) => {
             let index = sectorsArr.indexOf(sector);
             let sectorEl = document.getElementById(`sector${this.ID}${index}`);
-            let sectorScale = sector.scale;
-            sector.translate = ((index === sectorsArr.length)? 1 : leftSScalesSum) / ((sectorScale) ? sectorScale : 1) *100;
+            let sectorScale = sector.currentScale;
+            sector.translate = ((index === sectorsArr.length)? 1 : leftScalesSum) / ((sectorScale) ? sectorScale : 1) *100;
 
-            leftSScalesSum += sectorScale;
+            leftScalesSum += sectorScale;
             sectorsArr[index].calcTranslateCSS();
             sectorEl.setAttribute('style', `transform: ${sectorsArr[index].scaleCSS} ${sectorsArr[index].translateCSS}`)
         });
@@ -198,18 +201,29 @@ const slider = {
             let maxLimit = thumbsArr[thumbIndex + 1].xAbsolute; 
             let newX = currentX + offset;
 
+            function calcScales(index, offset) {
+                const sectorLeft = slider.sector[index];
+                const sectorRight = slider.sector[index+1];
+                
+                const newScaleL = sectorLeft.currentScale + (offset / slider.trackWidth)
+                const newScaleR = sectorRight.currentScale - (offset / slider.trackWidth)
+
+                sectorLeft.currentScale = newScaleL;
+                sectorRight.currentScale = newScaleR;
+            }
+
             if (minLimit < newX < maxLimit) {
                 thumbsArr.xAbsolute = newX;
+
+                calcScales(thumbIndex, offset);
+
+                this.calcScaleTranslate();
+
+                this.setThumb(thumbIndex);
             }
-            const minDefaultPosition = this.thumbMin.positionDefault;
-            const maxDefaultPosition = this.thumbMax.positionDefault;
+            
+            
 
-            const minCurrentPosition = this.thumbMin.positionCurrent;
-            const maxCurrentPosition = this.thumbMax.positionCurrent;
-
-            const currentMainScale = this.mainSector.scale;
-            const minCurrentScale = this.emptyMin.scale;
-            const maxCurrentScale = this.emptyMax.scale;
 
             let newMinScale = minCurrentScale + offset/100;
             let newMainScale = currentMainScale - offset/100;
@@ -248,6 +262,7 @@ const slider = {
     },
 }
 
+slider.renderSliderIn(document.getElementsByTagName('body')[0], 100, 4);
 /*slider.thumbMax = {
     // 10 is thumb width and 50 is 50% of thumb - needed in order to place thumb center on chosen value. 
     positionDefault: (slider.width - 10) / 10 * 100 + 50, 
