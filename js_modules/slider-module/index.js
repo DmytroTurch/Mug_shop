@@ -95,6 +95,7 @@ const slider = {
             let indexOfThumb = this.thumb.length;
             document.getElementById(`slider${this.ID}`).innerHTML += `<div class="thumb" id="thumb${this.ID}${indexOfThumb}"></div>`;
             this.thumb[indexOfThumb] = {
+                elDOM: document.getElementById(`thumb${this.ID}${indexOfThumb}`),
                 translate: 0,
                 translateCSS: undefined,
                 calcTranslateCSS() {
@@ -116,10 +117,10 @@ const slider = {
             let currentThumb = singleMode ? slider.thumb[input] : input;
 
             currentThumb.xAbsoluteDefault = currentElement.getBoundingClientRect().left;
-            currentThumb.xAbsolute = currentElement.getBoundingClientRect().left;
             currentThumb.translate = slider.trackWidth*offset/slider.thumbWidth*100 - 50; 
             currentThumb.calcTranslateCSS();
             currentElement.setAttribute('style', `transform: ${slider.thumb[index].translateCSS}`);
+            currentThumb.xAbsolute = currentElement.getBoundingClientRect().left;
             console.log(`defaultThumb${index}: ${currentThumb.translate}`);
         }
 
@@ -134,6 +135,7 @@ const slider = {
         for (let i = 0; i <= this.thumb.length; i++) {
             document.getElementById(`track${this.ID}`).innerHTML += `<div class="sector" id="sector${this.ID}${i}"></div>`
             this.sector[i] = {
+                elDOM : document.getElementById(`sector${this.ID}${i}`),
                 currentScale: 0,
                 initScale: 0,
                 scaleCSS: undefined,
@@ -195,70 +197,54 @@ const slider = {
 
 //at that moment take x as difference between start position of cursor and his current position ((start - current))
     moveThumb(thumbIndex, offset) {
-            let thumbsArr =  this.thumb;
-            let currentX = thumbsArr[thumbIndex].xAbsolute;
-            let minLimit = thumbsArr[thumbIndex].xAbsoluteDefault;
-            let maxLimit = thumbsArr[thumbIndex + 1].xAbsolute; 
+            
+            const thumbsArr =  this.thumb;
+            const currentX = thumbsArr[thumbIndex].xAbsolute;
+            const minLimit = ((thumbIndex - 1) > 0) ? thumbsArr[thumbIndex - 1].xAbsolute : this.trackStart;
+            const maxLimit = (thumbIndex >= thumbsArr.length) ? this.trackEnd : thumbsArr[thumbIndex + 1].xAbsolute;
+            const startThumb = (thumbIndex === 0);
+
+            const endThumb = (thumbIndex === this.thumb.length - 1);
+
+            const leftLimit = startThumb ? this.trackStart : minLimit;
+            const rightLimit = endThumb ? this.trackEnd : maxLimit;
+
+
             let newX = currentX + offset;
 
             function calcScales(index, offset) {
                 const sectorLeft = slider.sector[index];
                 const sectorRight = slider.sector[index+1];
                 
-                const newScaleL = sectorLeft.currentScale + (offset / slider.trackWidth)
-                const newScaleR = sectorRight.currentScale - (offset / slider.trackWidth)
+                const promisedScaleL = sectorLeft.currentScale + (offset / slider.trackWidth);
+                const promisedScaleR = sectorRight.currentScale - (offset / slider.trackWidth);
+                const scaleSum = sectorLeft.currentScale + sectorRight.currentScale;
+
+                const newScaleL = (promisedScaleL > scaleSum) ? scaleSum : ((promisedScaleL < 0 ) ? 0 : promisedScaleL);
+                const newScaleR = (promisedScaleR > scaleSum) ? scaleSum : ((promisedScaleR < 0 ) ? 0 : promisedScaleR);
 
                 sectorLeft.currentScale = newScaleL;
+                sectorLeft.calcScaleCSS();
                 sectorRight.currentScale = newScaleR;
+                sectorRight.calcScaleCSS();
             }
 
-            if (minLimit < newX < maxLimit) {
-                thumbsArr.xAbsolute = newX;
-
-                calcScales(thumbIndex, offset);
-
-                this.calcScaleTranslate();
-
-                this.setThumb(thumbIndex);
-            }
-            
-            
-
-
-            let newMinScale = minCurrentScale + offset/100;
-            let newMainScale = currentMainScale - offset/100;
-            let newMainTranslate = (newMinScale / newMainScale)*100;
-            let newThumbMinPosition = minCurrentPosition + offset*10;
-
-            if((newThumbMinPosition <  maxDefaultPosition) && (newThumbMinPosition >= maxCurrentPosition)) {
-                offset = newMainScale*100;
-                newMinScale = 1 - maxCurrentScale - 0.01;
-                newMainScale = 0.01;
-                newMainTranslate = (newMinScale / newMainScale)*100;;
-                newThumbMinPosition = maxCurrentPosition - 10;
-
-            }else if (newThumbMinPosition >= maxDefaultPosition) {
-                newMinScale = 0.99;
-                newMainScale = 0.01;
-                newMainTranslate = (newMinScale / newMainScale)*100;;
-                newThumbMinPosition = maxDefaultPosition - 10; // 10 is width of thumb. 
+            if (leftLimit < newX && newX < rightLimit) {
+                thumbsArr[thumbIndex].xAbsolute = newX;
+            } else if (leftLimit >= newX) {
+                thumbsArr[thumbIndex].xAbsolute = leftLimit;
+            } else if (rightLimit <= newX) {
+                thumbsArr[thumbIndex].xAbsolute = rightLimit;
             }
 
-            if(newThumbMinPosition < minDefaultPosition){
-                newMinScale = 0;
-                newMainScale = 1 - maxCurrentScale;
-                newMainTranslate = 0;
-                newThumbMinPosition = -50;
-            }
+            calcScales(thumbIndex, offset);
 
-            this.emptyMin.scale = newMinScale;
-            this.mainSector.scale = newMainScale;
-            this.mainSector.translate = newMainTranslate;
-            this.thumbMin.positionCurrent = newThumbMinPosition;
-            
-            sectorOne.setAttribute('style', `transform: scale(${newMinScale}, 1) translate(0%, 0px)`);
-            sectorTwo.setAttribute('style', `transform: scale(${newMainScale}, 1) translate(${newMainTranslate}%, 0px)`);
-            thumbMinEl.setAttribute('style', `translate: ${newThumbMinPosition}% 0%`);
+            this.calcScaleTranslate();
+
+            this.setThumb(thumbIndex);
+            this.sector[thumbIndex].elDOM.setAttribute('style', `transform: ${this.sector[thumbIndex].scaleCSS} ${this.sector[thumbIndex].translateCSS}`);
+            this.sector[thumbIndex + 1].elDOM.setAttribute('style', `transform: ${this.sector[thumbIndex + 1].scaleCSS} ${this.sector[thumbIndex + 1].translateCSS}`);
+            thumbsArr[thumbIndex].elDOM.setAttribute('style', `transform: ${thumbsArr[thumbIndex].translateCSS}`);
     },
 }
 
