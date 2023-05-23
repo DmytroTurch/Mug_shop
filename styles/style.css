@@ -83,25 +83,29 @@ nav .menu {
   padding: 0px;
   gap: 30px;
 }
-nav .menu .menu__button:last-child {
+nav .menu .menu__buttons {
+  position: relative;
+  top: -100px;
+}
+nav .menu .menu__buttons:last-child {
   padding: 0px;
 }
-nav .menu .menu__button.first {
+nav .menu .menu__buttons.first {
   animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 0s forwards;
 }
-nav .menu .menu__button.second {
+nav .menu .menu__buttons.second {
   animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 0.5s forwards;
 }
-nav .menu .menu__button.third {
+nav .menu .menu__buttons.third {
   animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 1s forwards;
 }
-nav .menu .menu__button.forth {
+nav .menu .menu__buttons.forth {
   animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 1.5s forwards;
 }
-nav .menu .menu__button.fifth {
+nav .menu .menu__buttons.fifth {
   animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 2s forwards;
 }
-nav .menu .menu__button.sixth {
+nav .menu .menu__buttons.sixth {
   animation: menu_buttons 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1 normal 2.5s forwards;
 }
 nav .burger-menu_closed {
