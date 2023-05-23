@@ -389,12 +389,40 @@ nav {
 
 .wrapper-sorting-selector {
     width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .sorting-selector {
     padding: 20px;
     display:flex;
     align-items: center;
+}
+
+.track {
+    width: 100px;
+    height: 3px;
+    border: 1px solid #000;
+    position: relative;
+}
+
+.thumb {
+    width: 13px;
+    height: 11.5px;
+    border: 1px solid #000;
+    position: absolute;
+    top: -5px;
+    left: -7px;
+    border-radius: 10px;
+}
+.slider {
+    
+    &::-webkit-scrollbar-thumb {
+        position: absolute;
+        top: -10px;
+    }
+    &::-webkit-scrollbar-track {
+    }
 }
 
 .render-off {

@@ -1,34 +1,93 @@
-const sectorOne = document.querySelector('.sector_one');
-const sectorTwo = document.querySelector('.sector_two');
-const sectorThree = document.querySelector('.sector_three');
-const thumbMinEl = document.querySelector('.thumb_min');
-const thumbMaxEl = document.querySelector('.thumb_max');
 
-const slider = {
-    ID: 0,
+class Thumb {
 
-    thumbWidth: 10,
-    thumbHeight: 14,
+    constructor(indexOfThumb, slider) {
+        this.elDOM = document.getElementById(`thumb${slider.ID}${indexOfThumb}`);
+        this.currentTranslate = 0;
+        this.newTranslate = 0;
+        this.translateCSS = undefined;
+        this.pointTo = undefined;
+        this.xAbsolute = undefined;
+        this.xAbsoluteDefault =
+        this.update = function() {
+                        this.translateCSS = `translate(${this.newTranslate}%, 0px)`;
+                        this.pointTo = Math.ceil(slider.min + (this.newTranslate / slider.thumbWidth) * (slider.max - slider.min) / slider.trackWidth)+5; 
+                        this.currentTranslate = this.newTranslate;
+                    }
+    }
+}
 
-    trackWidth : undefined,
-    trackStart: undefined,
-    trackEnd: undefined,
+class Sector {
+    constructor(i, slider) {
+        this.elDOM = document.getElementById(`sector${slider.ID}${i}`);
+        this.currentScale = 0;
+        this.initScale = 0;
+        this.scaleCSS = undefined;
+        this.calcScaleCSS = function() { this.scaleCSS = `scale(${this.currentScale}, 1)` };
+        this.translate = 0;
+        this.translateCSS = undefined;
+        this.calcTranslateCSS = function() { this.translateCSS = `translate(${this.translate}%, 0px)` };
+    }
+}
 
-    changeIDto(newID) {
-        this.ID = newID;
-    },
+class Slider {
+
+    constructor(ID, trackWidth, thumbsNumber, min, max) {
+        this.ID = ID;
+        this.trackWidth = trackWidth;
+        this.min = min;
+        this.max = max;
+        this.thumbsNumber = thumbsNumber;
+
+        this.thumbWidth = 10;
+        this.thumbHeight = 10;
+
+        this.thumb = [];
+        this.sector = [];
+
+        this.mousedown = false;
+    }
 
     setDefaultStyles() {
         document.getElementsByTagName('body')[0].innerHTML += `
         <style>
+            .pointer-container {
+                display: flex;
+                justify-content: space-around;
+                gap: 20px;
+                width: ${this.trackWidth}px;
+                margin-bottom: 10px;
+            }
+
+            .pointer {
+                box-sizing: border-box;
+                display: block;
+                width: 40px;
+                height: 20px;
+                background-color: #fff;
+                border-radius: 10px;
+                border: solid #000 1px;
+                box-shadow: inset 0.5px 0.5px 2px #000,;
+                text-align: center;
+            }
+
             .slider{
                 margin: 0;
-                border: 1px solid #c42525;
+                position: relative;
             }
             .slider__track {
-                height: 10px;
+                height: 2px;
                 position: relative;
                 margin: 0;
+            }
+
+            .sector {
+                position: absolute;
+                top:0px;
+                left: 0px;
+                height: 100%;
+                width: 100%;
+                transform-origin: 0 0;
             }
 
             .sector:nth-child(even){
@@ -41,7 +100,7 @@ const slider = {
 
             .thumb {
                 position: absolute;
-                top: 7px;
+                top: -4px;
                 width: ${this.thumbWidth}px;
                 height: ${this.thumbHeight}px;
                 background-color: #bdb4b4;
@@ -50,108 +109,30 @@ const slider = {
             }
         </style>
         `;
-    },
+    }
 
-    renderSliderIn(targetElement, trackWidth, number) {
-        this.setDefaultStyles();
-        targetElement.innerHTML += `
-            <div class="slider-container" >
-                <style scoped>
-                    div#slider${this.ID} {
-                        width: ${trackWidth}px;
-                    }
-                    div#track${this.ID} {
-                        width: ${trackWidth}px;
-                    }
-                </style>
-
-                <div class="slider" id="slider${this.ID}">
-                    <div class="slider__track" id="track${this.ID}"></div>
-                </div>
-            </div>`;
-        this.trackWidth = trackWidth;
-        this.setTrackPosition(this.ID);
-        this.createThumbs(number);
-        this.setSectors();
-        this.calculateInitScale();
-        this.calcScaleTranslate();
-        this.setThumb('all');
-
-        console.log(`NumThumbs: ${this.thumb.length}`)
-        console.log(`NumThumbs: ${this.sector.length}`)
-    },
-
+    
     setTrackPosition() {
         let coordObj = document.getElementById(`track${this.ID}`).getBoundingClientRect();
         this.trackStart = coordObj.left;
         this.trackEnd = coordObj.right;
-        console.log(`track start: ${this.trackStart}`);
-        console.log(`track end: ${this.trackEnd}`);
-        console.log(`track width: ${this.trackWidth}`);
-    },
+    }
 
     createThumbs(number) {
         for (let i = 0; i < number; i++) {
             let indexOfThumb = this.thumb.length;
-            document.getElementById(`slider${this.ID}`).innerHTML += `<div class="thumb" id="thumb${this.ID}${indexOfThumb}"></div>`;
-            this.thumb[indexOfThumb] = {
-                elDOM: document.getElementById(`thumb${this.ID}${indexOfThumb}`),
-                translate: 0,
-                translateCSS: undefined,
-                calcTranslateCSS() {
-                    this.translateCSS = `translate(${this.translate}%, 0px)`
-                },
-            };
-            this.thumb[i].calcTranslateCSS();
+            this.thumb[indexOfThumb] = new Thumb(indexOfThumb, this);
+            this.thumb[i].update();
         }
-    },
-
-    setThumb(index) { 
-        function setThisThumb (input) {
-            const singleMode = (typeof input === 'number');
-
-            let index = singleMode ? input : slider.thumb.indexOf(input);
-            let overlappedSectors = slider.sector.slice(0, index+1);
-            let offset = overlappedSectors.reduce((acc, next) => acc + next.currentScale, 0);
-            let currentElement = document.getElementById(`thumb${slider.ID}${index}`);
-            let currentThumb = singleMode ? slider.thumb[input] : input;
-
-            currentThumb.xAbsoluteDefault = currentElement.getBoundingClientRect().left;
-            currentThumb.translate = slider.trackWidth*offset/slider.thumbWidth*100 - 50; 
-            currentThumb.calcTranslateCSS();
-            currentElement.setAttribute('style', `transform: ${slider.thumb[index].translateCSS}`);
-            currentThumb.xAbsolute = currentElement.getBoundingClientRect().left;
-            console.log(`defaultThumb${index}: ${currentThumb.translate}`);
-        }
-
-        if (index === 'all') {
-            this.thumb.forEach((thumb) => {setThisThumb(thumb)});
-        } else if (typeof index === 'number') {
-            setThisThumb(index);
-        }
-    },
+    }
 
     setSectors() {
         for (let i = 0; i <= this.thumb.length; i++) {
-            document.getElementById(`track${this.ID}`).innerHTML += `<div class="sector" id="sector${this.ID}${i}"></div>`
-            this.sector[i] = {
-                elDOM : document.getElementById(`sector${this.ID}${i}`),
-                currentScale: 0,
-                initScale: 0,
-                scaleCSS: undefined,
-                calcScaleCSS() {
-                    this.scaleCSS = `scale(${this.currentScale}, 1)`
-                },
-                translate: 0,
-                translateCSS: undefined,
-                calcTranslateCSS() {
-                    this.translateCSS = `translate(${this.translate}%, 0px)`
-                },
-            };
+            this.sector[i] = new Sector(i, this);
             this.sector[i].calcScaleCSS();
             this.sector[i].calcTranslateCSS();
         }
-    },
+    }
  
     calculateInitScale() {
         const sectorsArr = this.sector;
@@ -173,7 +154,7 @@ const slider = {
             }
             
         });
-    },
+    }
 
 
     calcScaleTranslate() {
@@ -189,19 +170,42 @@ const slider = {
             sectorsArr[index].calcTranslateCSS();
             sectorEl.setAttribute('style', `transform: ${sectorsArr[index].scaleCSS} ${sectorsArr[index].translateCSS}`)
         });
-    },
+    }
 
-    sector: [],
+    
+    setThumb(index) { 
+        function setThisThumb (input, slider) {
+            const singleMode = (typeof input === 'number');
 
-    thumb: [],
+            let index = singleMode ? input : slider.thumb.indexOf(input);
+            let overlappedSectors = slider.sector.slice(0, index+1);
+            let offset = overlappedSectors.reduce((acc, next) => acc + next.currentScale, 0);
+            let currentElement = document.getElementById(`track${slider.ID}`);
+            let currentThumbElement = document.getElementById(`thumb${slider.ID}${index}`);
+            let currentThumb = singleMode ? slider.thumb[input] : input;
 
-//at that moment take x as difference between start position of cursor and his current position ((start - current))
+            currentThumb.xAbsoluteDefault = currentElement.getBoundingClientRect().left;
+            let correction = currentThumb.xAbsoluteDefault - currentThumbElement.getBoundingClientRect().left;
+             
+            currentThumb.newTranslate = slider.trackWidth*offset/slider.thumbWidth*100 - 50; 
+            currentThumb.update();
+            slider.thumb[index].elDOM.setAttribute('style', `transform: ${slider.thumb[index].translateCSS}`);
+            currentThumb.xAbsolute = slider.thumb[index].elDOM.getBoundingClientRect().left;
+        }
+
+        if (index === 'all') {
+            this.thumb.forEach((thumb) => {setThisThumb(thumb, this)});
+        } else if (typeof index === 'number') {
+            setThisThumb(index, this);
+        }
+    }
+
     moveThumb(thumbIndex, offset) {
             
             const thumbsArr =  this.thumb;
             const currentX = thumbsArr[thumbIndex].xAbsolute;
             const minLimit = ((thumbIndex - 1) > 0) ? thumbsArr[thumbIndex - 1].xAbsolute : this.trackStart;
-            const maxLimit = (thumbIndex >= thumbsArr.length) ? this.trackEnd : thumbsArr[thumbIndex + 1].xAbsolute;
+            const maxLimit = (thumbIndex + 1 >= thumbsArr.length) ? this.trackEnd : thumbsArr[thumbIndex + 1].xAbsolute;
             const startThumb = (thumbIndex === 0);
 
             const endThumb = (thumbIndex === this.thumb.length - 1);
@@ -212,7 +216,7 @@ const slider = {
 
             let newX = currentX + offset;
 
-            function calcScales(index, offset) {
+            function calcScales(index, offset, slider) {
                 const sectorLeft = slider.sector[index];
                 const sectorRight = slider.sector[index+1];
                 
@@ -237,42 +241,119 @@ const slider = {
                 thumbsArr[thumbIndex].xAbsolute = rightLimit;
             }
 
-            calcScales(thumbIndex, offset);
-
+            calcScales(thumbIndex, offset, this);
             this.calcScaleTranslate();
-
             this.setThumb(thumbIndex);
+
+
             this.sector[thumbIndex].elDOM.setAttribute('style', `transform: ${this.sector[thumbIndex].scaleCSS} ${this.sector[thumbIndex].translateCSS}`);
             this.sector[thumbIndex + 1].elDOM.setAttribute('style', `transform: ${this.sector[thumbIndex + 1].scaleCSS} ${this.sector[thumbIndex + 1].translateCSS}`);
             thumbsArr[thumbIndex].elDOM.setAttribute('style', `transform: ${thumbsArr[thumbIndex].translateCSS}`);
-    },
+            document.getElementById(`mid${thumbIndex}`).innerHTML = thumbsArr[thumbIndex].pointTo;
+    }
+
+    addInteraction() {
+        this.thumb.forEach((thumb, i) => document.getElementById(`thumb${this.ID}${i}`).addEventListener('mousedown', (take) => {
+            take.preventDefault;
+            this.mousedown = true;
+            this.downOn = +(take.target.id.split(`${this.ID}`)[1]); // get target id (thumb00). first 0 is id of slider. we need only last digit. 
+        }));
+
+        
+        window.addEventListener('selectstart', () => false);
+
+
+        window.addEventListener('mousemove', (move) => {
+            move.preventDefault;
+            if (this.mousedown) {
+                this.moveThumb(this.downOn, (move.clientX-this.thumb[this.downOn].xAbsolute));
+            }
+        });
+
+        window.addEventListener('mouseup', (drop) => {
+            drop.preventDefault;
+            this.mousedown = false;
+        });
+    }
+
+    renderPointer(number) {
+        let output = '';
+        for (let i = 0; i < number; i++){
+            output += `<span class="pointer" id="mid${i}">${(i === 0) ? this.min : (i === number - 1) ? this.max : ''}</span>`;
+        }
+        return output;
+    }
+
+    renderThumbs(number) {
+        let output = '';
+        for (let i = 0; i < number; i++){
+            output += `<div class="thumb" id="thumb${this.ID}${i}"></div>`;
+        }
+        return output;
+    }
+
+    renderSectors(number) {
+        let output = '';
+        for (let i = 0; i <= number; i++){
+            output += `<div class="sector" id="sector${this.ID}${i}"></div>`;
+        }
+        return output;
+    }
+
+    bindThumbsToPointer() {
+        this.thumb.forEach((thumb, ind) => {
+            if (ind === 0){
+                thumb.pointTo = this.min;
+            } else if (ind === this.thumb.length - 1){
+                thumb.pointTo = this.max;
+            } else {
+                thumb.pointTo = Math.ceil((thumb.newTranslate/this.thumbWidth + 0.5*this.thumbWidth) * ((this.max-this.min)/this.trackWidth));
+            }
+        })
+    }
+
+    active() {
+        this.createThumbs(this.thumbsNumber);
+        this.setSectors();
+        this.calculateInitScale();
+        this.calcScaleTranslate();
+        this.setThumb('all');
+        this.bindThumbsToPointer();
+        this.addInteraction();
+    }
+
+    render() {
+        this.setDefaultStyles();
+        const possibleMin = ((this.min >= 0) && (this.min < this.max)) ? true : false;
+        const possibleMax = ((this.max >= 0) && (this.min < this.max)) ? true : false; 
+
+        let HTMLstructure = `
+        
+            ${
+                (possibleMin && possibleMax) ? `<div class="pointer-container">${this.renderPointer(this.thumbsNumber)}</div>` : '' 
+            }
+            <div class="slider-container">
+                <style scoped>
+                    div#slider${this.ID} {
+                        width: ${this.trackWidth}px;
+                    }
+                    div#track${this.ID} {
+                        width: ${this.trackWidth}px;
+                    }
+                </style>
+
+                <div class="slider" id="slider${this.ID}">
+                    <div class="slider__track" id="track${this.ID}">${this.renderSectors(this.thumbsNumber)}</div>
+                    ${this.renderThumbs(this.thumbsNumber)}
+                </div>
+            </div>
+        
+        `;
+
+        this.codeHtml = HTMLstructure;
+    }
+
 }
 
-slider.renderSliderIn(document.getElementsByTagName('body')[0], 100, 4);
-/*slider.thumbMax = {
-    // 10 is thumb width and 50 is 50% of thumb - needed in order to place thumb center on chosen value. 
-    positionDefault: (slider.width - 10) / 10 * 100 + 50, 
-    initPos() {return this.positionDefault},
-   }
-
-slider.thumbMax.positionCurrent = slider.thumbMax.initPos();
-let onThumb = false;
 
 
-
-thumbMinEl.addEventListener('mousedown', (e) => {
-    onThumb = true;
-    let thumbCoordinates = e.target.getBoundingClientRect();
-    slider.thumbMin.xThumbAbsolute = thumbCoordinates.left + thumbCoordinates.width/2;
-    e.preventDefault;
-})
-window.addEventListener('mousemove', (e) => {
-    if (onThumb) {
-        slider.moveThumb((e.clientX-slider.thumbMin.xThumbAbsolute));
-    }
-    e.preventDefault;
-});
-window.addEventListener('mouseup', (e) => {
-    onThumb = false;
-    e.preventDefault;
-}); */

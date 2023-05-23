@@ -1,4 +1,4 @@
-//  Elements from DOM
+
 
 const productSlots = document.getElementById('slotsRender');
 const cartButton = document.getElementsByClassName('cart');
@@ -13,8 +13,21 @@ const mediaQueryMin940 = window.matchMedia('(min-width: 940px)');
 
 const burgerRenderPlace = document.querySelector('.burger-render');
 
+const thumb = document.querySelectorAll('.thumb');
 
 const inCart = [];
+
+function moveThumb (mousedown) {
+  document.querySelector('.slider-wrapper').addEventListener('mousemove', (slide) => {
+    mousedown.target.setAttribute('style', `left:${slide.offsetX}px`);
+  });  
+}
+
+function releaseMouse () {
+  document.querySelector('.slider-wrapper').removeEventListener('mousemove', (slide) => {
+    mousedown.target.setAttribute('style', `left:${slide.offsetX}px`);
+  });
+}
 
 function openBurger(click) {
   const burgerMenu = document.querySelector('.burger-menu');
@@ -72,10 +85,9 @@ function renderChanges(mediaObj) {
 
 // Cart interactions
 
-// FIXME: What is this e? Name parameters with meaning everywhere.
-function openCart(e) {
+function openCart(event) {
   cartPop.classList.add('open');
-  e.preventDefault();
+  event.preventDefault();
 }
 
 function closeCart(event) {
@@ -107,9 +119,7 @@ function calculateSameItemsPrice(id) {
   const price = document.querySelector(`#item_actPrice${id}`);
   inCart.forEach((each) => {
     if (id === each.id) {
-      // FIXME: Do you need this var?
-      const calculatedPrice = each.price * each.amount;
-      price.innerHTML = calculatedPrice;
+      price.innerHTML = each.price * each.amount;
     }
   });
 }
@@ -129,6 +139,10 @@ function clearCart() {
 function addOneOfTheseItem(event) {
   // FIXME: Replace item with object destruction approach? { id, amount  }
   // It is good practice if there are only several properties used
+  //----------------------------------------------------------------------
+  // function have to mutate objs in inCart array. Destructive assignment 
+  //make code logic more complicate and confusing.
+
   inCart.forEach((item) => {
     if (+event.currentTarget.id === item.id) {
       const counter = item.amount + 1;
@@ -229,6 +243,7 @@ function addItemToCart(event) {
 }
 
 function addEventListeners() {
+  test.active();
   cartButton[0].addEventListener('click', openCart);
   cartPop.addEventListener('click', closeCart);
   clearCartButton.addEventListener('click', clearCart);
@@ -239,6 +254,8 @@ function addEventListeners() {
 
   mediaQueryMax940.addEventListener('change', renderChanges);
   mediaQueryMin940.addEventListener('change', renderChanges);
+  Array.from(thumb, (oneOfThumbs) => oneOfThumbs.addEventListener('mousedown', moveThumb));
+  Array.from(thumb, (oneOfThumbs) => oneOfThumbs.addEventListener('mouseout', releaseMouse));
 }
 
 // sorting functions
@@ -249,8 +266,7 @@ function sortBy(property, fromLow) {
 
 function sortSize() {
   store.sort((a, b) => {
-    const compStr = `${a.size} - ${b.size}`;
-    // FIXME: Improve this checking with using array.includes()
+    const compStr = `${a.size} - ${b.size}`;vb 
     if (['S - M', 'M - L', 'S - L'].includes(compStr)) {
       return -1;
     }
@@ -279,5 +295,12 @@ function chooseSortingMethod(e) {
 }
 // -----------------
 
+
+
 renderSlots();
+const test = new Slider(0, 100, 2, 0, 100);
+test.render();
+console.log('main');
+document.querySelector('.slider-wrapper').innerHTML += test.codeHtml;
+
 addEventListeners();
