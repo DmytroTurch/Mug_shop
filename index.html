@@ -73,17 +73,32 @@
 
     <div class="content products">
         <h1 class="sectionheader"></h1>
-        <div class="wrapper-sorting-selector">
-            <div class="sorting-selector">   
-                <p class="text">Sort by: </p> 
-                <select name="sorting-method" id="sorting-method">
-                    <option value="default">---select method---</option>
-                    <option value="byPriceFromLow"> price from low to high</option>
-                    <option value="byPriceFromHigh"> price from high to low</option>
-                    <option value="bySize">size</option>
-                    <option value="amountOfProduct">amount</option>
-                </select>
-            </div> 
+        <div class="filter-bar">
+            <div class="wrapper-sorting-selector">
+                <div class="sorting-selector">   
+                    <p class="text">Sort by: </p> 
+                    <select name="sorting-method" id="sorting-method">
+                        <option value="default">---select method---</option>
+                        <option value="byPriceFromLow"> price from low to high</option>
+                        <option value="byPriceFromHigh"> price from high to low</option>
+                        <option value="bySize">size</option>
+                        <option value="amountOfProduct">amount</option>
+                    </select>
+                </div> 
+            </div>
+            <div class="slider-wrapper">
+                <div class="counter">
+                    <div class="counter__pointer counter__pointer_min">0</div>
+                    <div class="counter__pointer counter__pointer_max">0</div>
+                </div>
+                <div class="slider" id="price-filter">
+                    <div class="slider__track" id="track">
+
+                    </div>
+                    <div class="slider__thumb slider__thumb_min" id="thumb-min"></div>
+                    <div class="slider__thumb slider__thumb_max" id="thumb-max"></div>
+                </div>
+            </div>
         </div>
         <div class="section" id="slotsRender"></div>
     </div>
