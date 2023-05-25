@@ -279,5 +279,76 @@ function chooseSortingMethod(e) {
 }
 // -----------------
 
+const slider = {
+
+  get min() {return 0},
+
+  get max(){
+    const prices = store.map((item) => item.actualPrice);
+    return Math.max(...prices);
+  }, 
+
+};
+
+slider.track = {
+
+  get elPosObj(){ return document.getElementById('track').getBoundingClientRect() },
+  
+  get width() {return this.elPosObj.width},
+  
+  get step(){
+    return parseFloat((this.width / slider.max).toFixed(2));
+  }, 
+
+  get leftLimit(){ return this.elPosObj.left},
+
+  get rightLimit(){ return this.elPosObj.right}
+};
+
+slider.thumbMax = {
+  id: 'thumb-max',
+
+  get el(){
+    return document.getElementById(this.id);
+  },
+
+  get position(){ 
+    const thumbPos = this.el.getBoundingClientRect();
+    let position = 0;
+    function calcPosition() {position = thumbPos.left + thumbPos.width / 2};
+    calcPosition();
+    const track = slider.track;
+    const thumbMax = this.id === 'thumb-max';
+    const checkForMinLimit = position >= slider.thumbMin.position;
+    const checkForMaxLimit = position <= slider.thumbMax.position;
+    const checkLeftLimit = position >= track.leftLimit;
+    const checkRightLimit = position <= track.rightLimit;
+    const positioning = thumbMax ? (position - track.rightLimit) : (position - track.leftLimit);
+    const movingLimit = thumbMax ? checkForMinLimit : checkForMaxLimit;
+    const leftLimitPosition = thumbMax ? (track.leftLimit - track.rightLimit) : 0;
+    const rightLimitPosition = thumbMax ? 0 : (track.rightLimit - track.leftLimit);
+    const movingLimitPosition = thumbMax ? (slider.thumbMin.position - track.rightLimit) : (slider.thumbMax.position - track.leftLimit);
+
+    function positioningCorr(method) {
+      this.el.setAttribute('style', `left: ${method}px`);
+      calcPosition();
+      return position;
+    }
+    
+    if (checkLeftLimit && checkRightLimit && movingLimit) {
+      positioningCorr(positioning);
+    } else if (!checkLeftLimit) { 
+      positioningCorr(leftLimitPosition);
+    }else if (!checkRightLimit) {
+      positioningCorr(rightLimitPosition);
+    } else if (!movingLimit) {
+      positioningCorr(movingLimitPosition);
+    }
+  },
+};
+
+slider.thumbMin = Object.create(slider.thumbMax, {id: {value: 'thumb-min',}});
+
+
 renderSlots();
 addEventListeners();
