@@ -314,29 +314,34 @@ slider.thumbMax = {
 
   get position(){ 
     const thumbPos = this.el.getBoundingClientRect();
-    let position = 0;
-    function calcPosition() {position = thumbPos.left + thumbPos.width / 2};
-    calcPosition();
+    return thumbPos.left + thumbPos.width / 2;
+  },
+
+  set position(leftOffset) {
+    const position = this.position + leftOffset;
     const track = slider.track;
     const thumbMax = this.id === 'thumb-max';
     const checkForMinLimit = position >= slider.thumbMin.position;
     const checkForMaxLimit = position <= slider.thumbMax.position;
     const checkLeftLimit = position >= track.leftLimit;
     const checkRightLimit = position <= track.rightLimit;
-    const positioning = thumbMax ? (position - track.rightLimit) : (position - track.leftLimit);
     const movingLimit = thumbMax ? checkForMinLimit : checkForMaxLimit;
     const leftLimitPosition = thumbMax ? (track.leftLimit - track.rightLimit) : 0;
     const rightLimitPosition = thumbMax ? 0 : (track.rightLimit - track.leftLimit);
     const movingLimitPosition = thumbMax ? (slider.thumbMin.position - track.rightLimit) : (slider.thumbMax.position - track.leftLimit);
+    const currentThumb = this;
 
     function positioningCorr(method) {
-      this.el.setAttribute('style', `left: ${method}px`);
-      calcPosition();
-      return position;
+      currentThumb.el.setAttribute('style', `left: ${method}px`);
+      if (thumbMax) {
+        slider.pointerMax.valueOfPointer;
+      } else {
+        slider.pointerMin.valueOfPointer
+      }
     }
     
     if (checkLeftLimit && checkRightLimit && movingLimit) {
-      positioningCorr(positioning);
+      positioningCorr(leftOffset);
     } else if (!checkLeftLimit) { 
       positioningCorr(leftLimitPosition);
     }else if (!checkRightLimit) {
@@ -349,6 +354,29 @@ slider.thumbMax = {
 
 slider.thumbMin = Object.create(slider.thumbMax, {id: {value: 'thumb-min',}});
 
+slider.pointerMax = {
+  id: 'pointer-max',
+  get maxOrMin() {return /[m][a][x]/.test(this.id)},
+  get el() { return document.getElementById(this.id); },
+  get valueOfPointer() {
+    if (this.maxOrMin) {
+      const absoluteValue = slider.thumbMax.position - slider.track.leftLimit;
+      const actualValue = parseInt(absoluteValue/slider.track.step);
+      this.el.innerHTML = actualValue;
+      return (actualValue);
+    } else {
+      const absoluteValue = slider.thumbMin.position - slider.track.leftLimit;
+      const actualValue = parseInt(absoluteValue/slider.track.step);
+      this.el.innerHTML = actualValue;
+      return (actualValue);
+    }
+  }
+}
 
+slider.pointerMin = Object.create(slider.pointerMax, {id: {value: 'pointer-min',}});
+
+
+slider.pointerMax.valueOfPointer;
+slider.pointerMin.valueOfPointer;
 renderSlots();
 addEventListeners();
