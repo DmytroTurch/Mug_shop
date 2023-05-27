@@ -169,8 +169,9 @@ function removeOneOfTheseItem(event) {
 
 // Render functions
 
-function renderSlots() {
-  store.forEach((item) => {
+function renderSlots(array = store) {
+  productSlots.innerHTML = '';
+  array.forEach((item) => {
     productSlots.innerHTML += `
             <div class="shopLot" id="${item.id}">
                 <img src=".${item.img}" alt="${item.name}" class="itemPicture">
@@ -407,6 +408,12 @@ slider.pointerMax.valueOfPointer;
 slider.pointerMin.valueOfPointer;
 // ----------------------------------
 
+function filterByPrice() {
+  const newArr = store.filter((product) => (product.actualPrice >= parseInt(slider.pointerMin.el.textContent)) && (product.actualPrice <= parseInt(slider.pointerMax.el.textContent)));
+  renderSlots(newArr);
+}
+
+
 let thumbMaxActive = false;
 let thumbMinActive = false;
 
@@ -429,6 +436,7 @@ window.addEventListener('mousemove', (e) => {
 window.addEventListener('mouseup', (e) => {
   thumbMaxActive = false;
   thumbMinActive = false;
+  filterByPrice()
   e.preventDefault();
 });
 
