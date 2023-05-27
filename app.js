@@ -305,12 +305,15 @@ slider.track = {
   get rightLimit(){ return this.elPosObj.right}
 };
 
-slider.thumbMax = {
-  id: 'thumb-max',
+class Thumb  {
+  constructor (id){
+    this.id = id
+  };
 
-  currentOffset: 0,
-
-
+  #offset = 0;
+  
+  get currentOffset() { return this.#offset }
+  
   /**
    * @param {number} step
    */
@@ -318,37 +321,38 @@ slider.thumbMax = {
     const newOffset = this.currentOffset + step;
     if (this.id === 'thumb-max') {
       if (newOffset < -slider.track.width) {
-        this.currentOffset = (-slider.track.width);
+        this.#offset = (-slider.track.width);
       } else if (newOffset < (-(slider.track.width - slider.thumbMin.currentOffset - 20))) {
-        this.currentOffset = (-(slider.track.width - slider.thumbMin.currentOffset - 20));
+        this.#offset = (-(slider.track.width - slider.thumbMin.currentOffset - 20));
       } else if (newOffset > 0) {
-        this.currentOffset = 0;
+        this.#offset = 0;
       }else {
-        this.currentOffset += step;
+        this.#offset += step;
       }
     }
-      if (this.id === 'thumb-min') {
-        if (newOffset > slider.track.width) {
-          this.currentOffset = slider.track.width;
-        } else if (newOffset > (slider.track.width + slider.thumbMax.currentOffset - 20)) {
-          this.currentOffset = (slider.track.width + slider.thumbMax.currentOffset - 20);
-        } else if (newOffset < 0) {
-          this.currentOffset = 0;
-        }else {
-          this.currentOffset += step;
-        }
+    
+    if (this.id === 'thumb-min') {
+      if (newOffset > slider.track.width) {
+        this.#offset = slider.track.width;
+      } else if (newOffset > (slider.track.width + slider.thumbMax.currentOffset - 20)) {
+        this.#offset = (slider.track.width + slider.thumbMax.currentOffset - 20);
+      } else if (newOffset < 0) {
+        this.#offset = 0;
+      }else {
+        this.#offset += step;
+      }
     }
     
-  },
+  };
 
   get el(){
     return document.getElementById(this.id);
-  },
+  };
 
   get position(){ 
     const thumbPos = this.el.getBoundingClientRect();
     return thumbPos.left + thumbPos.width / 2;
-  },
+  };
 
   moveThumb(mouse) {
     let offset = 0
@@ -371,10 +375,11 @@ slider.thumbMax = {
       slider.pointerMin.valueOfPointer;
       offset = 0;
     }
-  },
+  }
 };
 
-slider.thumbMin = Object.create(slider.thumbMax, {id: {value: 'thumb-min',}});
+slider.thumbMin = new Thumb('thumb-min');
+slider.thumbMax = new Thumb('thumb-max');
 
 slider.pointerMax = {
   id: 'pointer-max',
