@@ -308,6 +308,39 @@ slider.track = {
 slider.thumbMax = {
   id: 'thumb-max',
 
+  currentOffset: 0,
+
+
+  /**
+   * @param {number} step
+   */
+  set newOffset(step) {
+    const newOffset = this.currentOffset + step;
+    if (this.id === 'thumb-max') {
+      if (newOffset < -slider.track.width) {
+        this.currentOffset = (-slider.track.width);
+      } else if (newOffset < (-(slider.track.width - slider.thumbMin.currentOffset - 20))) {
+        this.currentOffset = (-(slider.track.width - slider.thumbMin.currentOffset - 20));
+      } else if (newOffset > 0) {
+        this.currentOffset = 0;
+      }else {
+        this.currentOffset += step;
+      }
+    }
+      if (this.id === 'thumb-min') {
+        if (newOffset > slider.track.width) {
+          this.currentOffset = slider.track.width;
+        } else if (newOffset > (slider.track.width + slider.thumbMax.currentOffset - 20)) {
+          this.currentOffset = (slider.track.width + slider.thumbMax.currentOffset - 20);
+        } else if (newOffset < 0) {
+          this.currentOffset = 0;
+        }else {
+          this.currentOffset += step;
+        }
+    }
+    
+  },
+
   get el(){
     return document.getElementById(this.id);
   },
@@ -317,37 +350,26 @@ slider.thumbMax = {
     return thumbPos.left + thumbPos.width / 2;
   },
 
-  set position(leftOffset) {
-    const position = this.position + leftOffset;
-    const track = slider.track;
-    const thumbMax = this.id === 'thumb-max';
-    const checkForMinLimit = position >= slider.thumbMin.position;
-    const checkForMaxLimit = position <= slider.thumbMax.position;
-    const checkLeftLimit = position >= track.leftLimit;
-    const checkRightLimit = position <= track.rightLimit;
-    const movingLimit = thumbMax ? checkForMinLimit : checkForMaxLimit;
-    const leftLimitPosition = thumbMax ? (track.leftLimit - track.rightLimit) : 0;
-    const rightLimitPosition = thumbMax ? 0 : (track.rightLimit - track.leftLimit);
-    const movingLimitPosition = thumbMax ? (slider.thumbMin.position - track.rightLimit) : (slider.thumbMax.position - track.leftLimit);
-    const currentThumb = this;
-
-    function positioningCorr(method) {
-      currentThumb.el.setAttribute('style', `left: ${method}px`);
-      if (thumbMax) {
-        slider.pointerMax.valueOfPointer;
-      } else {
-        slider.pointerMin.valueOfPointer
+  moveThumb(mouse) {
+    let offset = 0
+    let cursorPos = Math.ceil(mouse.clientX);
+    let thumbPosition = Math.ceil(this.position);
+    while (cursorPos !== thumbPosition) {
+      let direction = cursorPos - this.position;
+      if (direction > 0) {
+        offset++
+        thumbPosition++
+      } else if (direction < 0) {
+        offset--
+        thumbPosition--
       }
-    }
-    
-    if (checkLeftLimit && checkRightLimit && movingLimit) {
-      positioningCorr(leftOffset);
-    } else if (!checkLeftLimit) { 
-      positioningCorr(leftLimitPosition);
-    }else if (!checkRightLimit) {
-      positioningCorr(rightLimitPosition);
-    } else if (!movingLimit) {
-      positioningCorr(movingLimitPosition);
+
+      this.newOffset = offset;
+
+      this.el.setAttribute('style', `left: ${this.currentOffset}px`);
+      slider.pointerMax.valueOfPointer;
+      slider.pointerMin.valueOfPointer;
+      offset = 0;
     }
   },
 };
@@ -375,8 +397,35 @@ slider.pointerMax = {
 
 slider.pointerMin = Object.create(slider.pointerMax, {id: {value: 'pointer-min',}});
 
-
+// -- set initial value of counter --
 slider.pointerMax.valueOfPointer;
 slider.pointerMin.valueOfPointer;
+// ----------------------------------
+
+let thumbMaxActive = false;
+let thumbMinActive = false;
+
+slider.thumbMax.el.addEventListener('mousedown', (e) => {
+  thumbMaxActive = true;
+  e.preventDefault();
+});
+slider.thumbMin.el.addEventListener('mousedown', (e) => {
+  thumbMinActive = true;
+  e.preventDefault();
+});
+window.addEventListener('mousemove', (e) => {
+  if (thumbMaxActive) {
+    slider.thumbMax.moveThumb(e);
+  }else if (thumbMinActive){
+    slider.thumbMin.moveThumb(e);
+  }
+  e.preventDefault();
+});
+window.addEventListener('mouseup', (e) => {
+  thumbMaxActive = false;
+  thumbMinActive = false;
+  e.preventDefault();
+});
+
 renderSlots();
 addEventListeners();
