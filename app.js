@@ -263,6 +263,7 @@ function sortSize() {
 }
 
 function chooseSortingMethod(e) {
+  // FIXME: Rewrite with switchCase
   if (!(currentSortingMethod === e.target.value)) {
     if (e.target.value === 'byPriceFromLow') {
       sortBy('actualPrice', true);
@@ -291,8 +292,10 @@ const slider = {
 
 };
 
+// NOTE: Why is is separated from object higher?
 slider.track = {
 
+  // NOTE: What this name mean?
   get elPosObj(){ return document.getElementById('track').getBoundingClientRect() },
   
   get width() {return this.elPosObj.width},
@@ -320,6 +323,8 @@ class Thumb  {
    */
   set newOffset(step) {
     const newOffset = this.currentOffset + step;
+    // NOTE: this two checks looks pretty similar
+    // FIXME: Rename ids to upperCase pattern
     if (this.id === 'thumb-max') {
       if (newOffset < -slider.track.width) {
         this.#offset = (-slider.track.width);
@@ -372,6 +377,7 @@ class Thumb  {
       this.newOffset = offset;
 
       this.el.setAttribute('style', `left: ${this.currentOffset}px`);
+      // NOTE: what does it do?
       slider.pointerMax.valueOfPointer;
       slider.pointerMin.valueOfPointer;
       offset = 0;
@@ -382,6 +388,8 @@ class Thumb  {
 slider.thumbMin = new Thumb('thumb-min');
 slider.thumbMax = new Thumb('thumb-max');
 
+// FIXME: you should have separate class or object pointer and then extend it to pointer min and max
+// Now it is confusing mix object of two different pointers.  
 slider.pointerMax = {
   id: 'pointer-max',
   get maxOrMin() {return /[m][a][x]/.test(this.id)},
@@ -390,6 +398,7 @@ slider.pointerMax = {
     if (this.maxOrMin) {
       const absoluteValue = slider.thumbMax.position - slider.track.leftLimit;
       const actualValue = parseInt(absoluteValue/slider.track.step);
+      // FIXME: This logic should not be in getter() function 
       this.el.innerHTML = actualValue;
       return (actualValue);
     } else {
@@ -403,12 +412,14 @@ slider.pointerMax = {
 
 slider.pointerMin = Object.create(slider.pointerMax, {id: {value: 'pointer-min',}});
 
+// FIXME: You name it set but is calling getter?
 // -- set initial value of counter --
 slider.pointerMax.valueOfPointer;
 slider.pointerMin.valueOfPointer;
 // ----------------------------------
 
 function filterByPrice() {
+  // NOTE: You can create separate function getPriceLimit(value) for parseInt
   const newArr = store.filter((product) => (product.actualPrice >= parseInt(slider.pointerMin.el.textContent)) && (product.actualPrice <= parseInt(slider.pointerMax.el.textContent)));
   renderSlots(newArr);
 }
