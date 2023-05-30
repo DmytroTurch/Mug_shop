@@ -73,9 +73,9 @@ function renderChanges(mediaObj) {
 // Cart interactions
 
 // FIXME: What is this e? Name parameters with meaning everywhere.
-function openCart(e) {
+function openCart(click) {
   cartPop.classList.add('open');
-  e.preventDefault();
+  click.preventDefault();
 }
 
 function closeCart(event) {
@@ -262,16 +262,16 @@ function sortSize() {
   });
 }
 
-function chooseSortingMethod(e) {
+function chooseSortingMethod(option) {
   // FIXME: Rewrite with switchCase
-  if (!(currentSortingMethod === e.target.value)) {
-    if (e.target.value === 'byPriceFromLow') {
+  if (!(currentSortingMethod === option.target.value)) {
+    if (option.target.value === 'byPriceFromLow') {
       sortBy('actualPrice', true);
-    } else if (e.target.value === 'byPriceFromHigh') {
+    } else if (option.target.value === 'byPriceFromHigh') {
       sortBy('actualPrice', false);
-    } else if (e.target.value === 'bySize') {
+    } else if (option.target.value === 'bySize') {
       sortSize();
-    } else if (e.target.value === 'byAmount') {
+    } else if (option.target.value === 'byAmount') {
       sortBy('amountOfProduct', true);
     }
   }
@@ -428,27 +428,27 @@ function filterByPrice() {
 let thumbMaxActive = false;
 let thumbMinActive = false;
 
-slider.thumbMax.el.addEventListener('mousedown', (e) => {
+slider.thumbMax.el.addEventListener('mousedown', (mousedown) => {
   thumbMaxActive = true;
-  e.preventDefault();
+  mousedown.preventDefault();
 });
-slider.thumbMin.el.addEventListener('mousedown', (e) => {
+slider.thumbMin.el.addEventListener('mousedown', (mousedown) => {
   thumbMinActive = true;
-  e.preventDefault();
+  mousedown.preventDefault();
 });
-window.addEventListener('mousemove', (e) => {
+window.addEventListener('mousemove', (move) => {
   if (thumbMaxActive) {
-    slider.thumbMax.moveThumb(e);
+    slider.thumbMax.moveThumb(move);
   }else if (thumbMinActive){
-    slider.thumbMin.moveThumb(e);
+    slider.thumbMin.moveThumb(move);
   }
-  e.preventDefault();
+  move.preventDefault();
 });
-window.addEventListener('mouseup', (e) => {
+window.addEventListener('mouseup', (up) => {
   thumbMaxActive = false;
   thumbMinActive = false;
   filterByPrice()
-  e.preventDefault();
+  up.preventDefault();
 });
 
 renderSlots();
