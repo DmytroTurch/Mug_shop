@@ -322,30 +322,18 @@ class Thumb  {
     const newOffset = this.currentOffset + step;
     // NOTE: this two checks looks pretty similar
     // FIXME: Rename ids to upperCase pattern
-    if (this.id === 'thumb-max') {
-      if (newOffset < -slider.track.width) {
-        this.#offset = (-slider.track.width);
-      } else if (newOffset < (-(slider.track.width - slider.thumbMin.currentOffset - 20))) {
-        this.#offset = (-(slider.track.width - slider.thumbMin.currentOffset - 20));
-      } else if (newOffset > 0) {
-        this.#offset = 0;
-      }else {
-        this.#offset += step;
-      }
+    const checkMax = this.id === 'thumbMax';
+    const movingLimit = checkMax ? (newOffset < (-(slider.track.width - slider.thumbMin.currentOffset - 20))) : (newOffset > (slider.track.width + slider.thumbMax.currentOffset - 20));
+    const corToMovingLimit = checkMax ? (-(slider.track.width - slider.thumbMin.currentOffset - 20)) : (slider.track.width + slider.thumbMax.currentOffset - 20);
+    const zeroOffset = checkMax ? (newOffset > 0) : (newOffset < 0);
+
+    if (movingLimit) {
+      this.#offset = corToMovingLimit;
+    } else if (zeroOffset) {
+      this.#offset = 0;
+    }else {
+      this.#offset += step;
     }
-    
-    if (this.id === 'thumb-min') {
-      if (newOffset > slider.track.width) {
-        this.#offset = slider.track.width;
-      } else if (newOffset > (slider.track.width + slider.thumbMax.currentOffset - 20)) {
-        this.#offset = (slider.track.width + slider.thumbMax.currentOffset - 20);
-      } else if (newOffset < 0) {
-        this.#offset = 0;
-      }else {
-        this.#offset += step;
-      }
-    }
-    
   };
 
   get el(){
@@ -382,8 +370,8 @@ class Thumb  {
   }
 };
 
-slider.thumbMin = new Thumb('thumb-min');
-slider.thumbMax = new Thumb('thumb-max');
+slider.thumbMin = new Thumb('thumbMin');
+slider.thumbMax = new Thumb('thumbMax');
 
 // FIXME: you should have separate class or object pointer and then extend it to pointer min and max
 // Now it is confusing mix object of two different pointers.  
