@@ -278,14 +278,14 @@ function chooseSortingMethod(option) {
 }
 // -----------------
 
-class Thumb  {
+class Thumb {
   constructor (id){
     this.id = id
   };
 
   #offset = 0;
   
-  get currentOffset() { return this.#offset }
+  get currentOffset() { return this.#offset };
   
   /**
    * @param {number} step
@@ -332,12 +332,35 @@ class Thumb  {
       this.newOffset = offset;
 
       this.el.setAttribute('style', `left: ${this.currentOffset}px`);
-      // NOTE: what does it do?
-      slider.pointerMax.valueOfPointer;
-      slider.pointerMin.valueOfPointer;
+
+      slider.pointerMax.setValueOfPointer();
+      slider.pointerMin.setValueOfPointer();
       offset = 0;
     }
   }
+};
+
+class Pointer {
+  constructor (id){
+    this.id = id
+  };
+  get maxOrMin() {return /[M][a][x]/.test(this.id)};
+
+  get el() { return document.getElementById(this.id); };
+
+  setValueOfPointer() {
+    if (this.maxOrMin) {
+      const absoluteValue = slider.thumbMax.position - slider.track.leftLimit;
+      const actualValue = parseInt(absoluteValue/slider.track.step);
+      this.el.innerHTML = actualValue;
+      return (actualValue);
+    } else {
+      const absoluteValue = slider.thumbMin.position - slider.track.leftLimit;
+      const actualValue = parseInt(absoluteValue/slider.track.step);
+      this.el.innerHTML = actualValue;
+      return (actualValue);
+    }
+  };
 };
 
 const slider = {
@@ -351,8 +374,6 @@ const slider = {
 
 
   track: {
-
-    // NOTE: What this name mean?
     get DOMReact(){ return document.getElementById('track').getBoundingClientRect() },
     
     get width() {return this.DOMReact.width},
@@ -368,39 +389,16 @@ const slider = {
 
   thumbMin: new Thumb('thumbMin'),
   thumbMax: new Thumb('thumbMax'),
+
+  pointerMin: new Pointer('pointerMin'),
+  pointerMax: new Pointer('pointerMax'),
 };
-
-
-
-// FIXME: you should have separate class or object pointer and then extend it to pointer min and max
-// Now it is confusing mix object of two different pointers.  
-slider.pointerMax = {
-  id: 'pointer-max',
-  get maxOrMin() {return /[m][a][x]/.test(this.id)},
-  get el() { return document.getElementById(this.id); },
-  get valueOfPointer() {
-    if (this.maxOrMin) {
-      const absoluteValue = slider.thumbMax.position - slider.track.leftLimit;
-      const actualValue = parseInt(absoluteValue/slider.track.step);
-      // FIXME: This logic should not be in getter() function 
-      this.el.innerHTML = actualValue;
-      return (actualValue);
-    } else {
-      const absoluteValue = slider.thumbMin.position - slider.track.leftLimit;
-      const actualValue = parseInt(absoluteValue/slider.track.step);
-      this.el.innerHTML = actualValue;
-      return (actualValue);
-    }
-  }
-}
-
-slider.pointerMin = Object.create(slider.pointerMax, {id: {value: 'pointer-min',}});
-
-// FIXME: You name it set but is calling getter?
 // -- set initial value of counter --
-slider.pointerMax.valueOfPointer;
-slider.pointerMin.valueOfPointer;
+slider.pointerMax.setValueOfPointer();
+slider.pointerMin.setValueOfPointer();
 // ----------------------------------
+
+
 
 function filterByPrice() {
   // NOTE: You can create separate function getPriceLimit(value) for parseInt
