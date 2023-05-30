@@ -245,7 +245,6 @@ function sortBy(property, fromLow) {
 function sortSize() {
   store.sort((a, b) => {
     const compStr = `${a.size} - ${b.size}`;
-    // FIXME: Improve this checking with using array.includes()
     if (['S - M', 'M - L', 'S - L'].includes(compStr)) {
       return -1;
     }
@@ -257,16 +256,20 @@ function sortSize() {
 }
 
 function chooseSortingMethod(option) {
-  // FIXME: Rewrite with switchCase
   if (!(currentSortingMethod === option.target.value)) {
-    if (option.target.value === 'byPriceFromLow') {
-      sortBy('actualPrice', true);
-    } else if (option.target.value === 'byPriceFromHigh') {
-      sortBy('actualPrice', false);
-    } else if (option.target.value === 'bySize') {
-      sortSize();
-    } else if (option.target.value === 'byAmount') {
-      sortBy('amountOfProduct', true);
+    switch (option.target.value) {
+      case 'byPriceFromLow':
+        sortBy('actualPrice', true);
+        break;
+      case 'byPriceFromHigh':
+        sortBy('actualPrice', false);
+        break;
+      case 'bySize':
+        sortSize();
+        break;
+      case 'byAmount':
+        sortBy('amountOfProduct', true);
+        break;
     }
   }
   productSlots.innerHTML = '';
