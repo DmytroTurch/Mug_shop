@@ -398,11 +398,12 @@ slider.pointerMax.setValueOfPointer();
 slider.pointerMin.setValueOfPointer();
 // ----------------------------------
 
-
+function getPriceLimit(pointer){
+  return parseInt(slider[pointer].el.textContent)
+}
 
 function filterByPrice() {
-  // NOTE: You can create separate function getPriceLimit(value) for parseInt
-  const newArr = store.filter((product) => (product.actualPrice >= parseInt(slider.pointerMin.el.textContent)) && (product.actualPrice <= parseInt(slider.pointerMax.el.textContent)));
+  const newArr = store.filter((product) => (product.actualPrice >= getPriceLimit('pointerMin')) && (product.actualPrice <= getPriceLimit('pointerMax')));
   renderSlots(newArr);
 }
 
