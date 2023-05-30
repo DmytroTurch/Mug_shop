@@ -278,34 +278,6 @@ function chooseSortingMethod(option) {
 }
 // -----------------
 
-const slider = {
-
-  get min() {return 0},
-
-  get max(){
-    const prices = store.map((item) => item.actualPrice);
-    return Math.max(...prices);
-  }, 
-
-};
-
-// NOTE: Why is is separated from object higher?
-slider.track = {
-
-  // NOTE: What this name mean?
-  get elPosObj(){ return document.getElementById('track').getBoundingClientRect() },
-  
-  get width() {return this.elPosObj.width},
-  
-  get step(){
-    return parseFloat((this.width / slider.max).toFixed(2));
-  }, 
-
-  get leftLimit(){ return this.elPosObj.left},
-
-  get rightLimit(){ return this.elPosObj.right}
-};
-
 class Thumb  {
   constructor (id){
     this.id = id
@@ -320,8 +292,6 @@ class Thumb  {
    */
   set newOffset(step) {
     const newOffset = this.currentOffset + step;
-    // NOTE: this two checks looks pretty similar
-    // FIXME: Rename ids to upperCase pattern
     const checkMax = this.id === 'thumbMax';
     const movingLimit = checkMax ? (newOffset < (-(slider.track.width - slider.thumbMin.currentOffset - 20))) : (newOffset > (slider.track.width + slider.thumbMax.currentOffset - 20));
     const corToMovingLimit = checkMax ? (-(slider.track.width - slider.thumbMin.currentOffset - 20)) : (slider.track.width + slider.thumbMax.currentOffset - 20);
@@ -370,8 +340,37 @@ class Thumb  {
   }
 };
 
-slider.thumbMin = new Thumb('thumbMin');
-slider.thumbMax = new Thumb('thumbMax');
+const slider = {
+
+  get min() {return 0},
+
+  get max(){
+    const prices = store.map((item) => item.actualPrice);
+    return Math.max(...prices);
+  }, 
+
+
+  track: {
+
+    // NOTE: What this name mean?
+    get DOMReact(){ return document.getElementById('track').getBoundingClientRect() },
+    
+    get width() {return this.DOMReact.width},
+    
+    get step(){
+      return parseFloat((this.width / slider.max).toFixed(2));
+    }, 
+
+    get leftLimit(){ return this.DOMReact.left},
+
+    get rightLimit(){ return this.DOMReact.right}
+  },
+
+  thumbMin: new Thumb('thumbMin'),
+  thumbMax: new Thumb('thumbMax'),
+};
+
+
 
 // FIXME: you should have separate class or object pointer and then extend it to pointer min and max
 // Now it is confusing mix object of two different pointers.  
