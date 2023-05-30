@@ -113,7 +113,6 @@ function calculateSameItemsPrice(id) {
 function clearCart() {
   const itemsInCart = document.querySelectorAll('.item');
 
-  // FIXME: How to improve this checking
   if (inCart.length) {
     Array.from(itemsInCart, (item) => item.remove());
     inCart.splice(0, inCart.length);
@@ -123,19 +122,18 @@ function clearCart() {
 }
 
 function addOneOfTheseItem(event) {
-  // FIXME: Replace item with object destruction approach? { id, amount  }
-  // It is good practice if there are only several properties used
   inCart.forEach((item) => {
-    if (+event.currentTarget.id === item.id) {
-      const counter = item.amount + 1;
-      if (counter > store[item.id - 1].amountOfProduct) {
+    let {id, amount} = item;
+    if (+event.currentTarget.id === id) {
+      const counter = amount + 1;
+      if (counter > store[id - 1].amountOfProduct) {
         alert('Sorry the number of available product is limited!');
       } else {
-        document.getElementById(`amount${item.id}`).innerHTML = counter;
+        document.getElementById(`amount${id}`).innerHTML = counter;
         item.amount = counter;
       }
 
-      calculateSameItemsPrice(item.id);
+      calculateSameItemsPrice(id);
     }
   });
   countAllItemsInCart();
