@@ -71,8 +71,6 @@ function renderChanges(mediaObj) {
 // -------------
 
 // Cart interactions
-
-// FIXME: What is this e? Name parameters with meaning everywhere.
 function openCart(click) {
   cartPop.classList.add('open');
   click.preventDefault();
@@ -107,9 +105,7 @@ function calculateSameItemsPrice(id) {
   const price = document.querySelector(`#item_actPrice${id}`);
   inCart.forEach((each) => {
     if (id === each.id) {
-      // FIXME: Do you need this var?
-      const calculatedPrice = each.price * each.amount;
-      price.innerHTML = calculatedPrice;
+      price.innerHTML = each.price * each.amount;
     }
   });
 }
