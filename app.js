@@ -434,5 +434,30 @@ window.addEventListener('mouseup', (up) => {
   up.preventDefault();
 });
 
+
+//touchscreen
+
+slider.thumbMax.el.addEventListener('touchstart', (start) => {
+  thumbMaxActive = true;
+  start.preventDefault();
+});
+slider.thumbMin.el.addEventListener('touchstart', (start) => {
+  thumbMinActive = true;
+  start.preventDefault();
+});
+window.addEventListener('touchmove', (move) => {
+  if (thumbMaxActive) {
+    slider.thumbMax.moveThumb(move.changedTouches[0]);
+  }else if (thumbMinActive){
+    slider.thumbMin.moveThumb(move.changedTouches[0]);
+  }
+});
+window.addEventListener('touchend', () => {
+  thumbMaxActive = false;
+  thumbMinActive = false;
+  filterByPrice()
+});
+
 renderSlots();
 addEventListeners();
+
