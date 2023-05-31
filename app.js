@@ -292,9 +292,15 @@ class Thumb {
    */
   set newOffset(step) {
     const newOffset = this.currentOffset + step;
+    // FIXME: Bad name for boolean check
     const checkMax = this.id === 'thumbMax';
-    const movingLimit = checkMax ? (newOffset < (-(slider.track.width - slider.thumbMin.currentOffset - 20))) : (newOffset > (slider.track.width + slider.thumbMax.currentOffset - 20));
-    const corToMovingLimit = checkMax ? (-(slider.track.width - slider.thumbMin.currentOffset - 20)) : (slider.track.width + slider.thumbMax.currentOffset - 20);
+    // FIXME: Make it easier to read
+    // FIXME: Bad name for boolean check, try: isTrackOutOfLimit || isInTrackBoundaries
+    const movingLimit = checkMax
+      ? (newOffset < (-(slider.track.width - slider.thumbMin.currentOffset - 20)))
+      : (newOffset > (slider.track.width + slider.thumbMax.currentOffset - 20));
+    // FIXME: Bad name for boolean check, try: getLimitCoordinate || moveTo...
+    const corToMovingLimit = checkMax? (-(slider.track.width - slider.thumbMin.currentOffset - 20)) : (slider.track.width + slider.thumbMax.currentOffset - 20);
     const zeroOffset = checkMax ? (newOffset > 0) : (newOffset < 0);
 
     if (movingLimit) {
@@ -317,6 +323,7 @@ class Thumb {
 
   moveThumb(mouse) {
     let offset = 0
+    // FIXME: Why let
     let cursorPos = Math.ceil(mouse.clientX);
     let thumbPosition = Math.ceil(this.position);
     while (cursorPos !== thumbPosition) {
@@ -348,6 +355,7 @@ class Pointer {
 
   get el() { return document.getElementById(this.id); };
 
+  // FIXME: Simplify using id and maxOrMin
   setValueOfPointer() {
     if (this.maxOrMin) {
       const absoluteValue = slider.thumbMax.position - slider.track.leftLimit;
@@ -363,6 +371,7 @@ class Pointer {
   };
 };
 
+// FIXME: Create class for it
 const slider = {
 
   get min() {return 0},
@@ -372,7 +381,7 @@ const slider = {
     return Math.max(...prices);
   }, 
 
-
+ // FIXME: create class for track
   track: {
     get DOMReact(){ return document.getElementById('track').getBoundingClientRect() },
     
@@ -398,6 +407,7 @@ slider.pointerMax.setValueOfPointer();
 slider.pointerMin.setValueOfPointer();
 // ----------------------------------
 
+// FIXME: Move it after function where it is called
 function getPriceLimit(pointer){
   return parseInt(slider[pointer].el.textContent)
 }
@@ -411,6 +421,7 @@ function filterByPrice() {
 let thumbMaxActive = false;
 let thumbMinActive = false;
 
+// FIXME: Too much duplication of it. Create function like addEventListenerToThumb()
 slider.thumbMax.el.addEventListener('mousedown', (mousedown) => {
   thumbMaxActive = true;
   mousedown.preventDefault();
