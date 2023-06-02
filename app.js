@@ -292,19 +292,15 @@ class Thumb {
    */
   set newOffset(step) {
     const newOffset = this.currentOffset + step;
-    // FIXME: Bad name for boolean check
-    const checkMax = this.id === 'thumbMax';
-    // FIXME: Make it easier to read
-    // FIXME: Bad name for boolean check, try: isTrackOutOfLimit || isInTrackBoundaries
-    const movingLimit = checkMax
+    const isMAX = this.id === 'thumbMax';
+    const isThumbCollision = isMAX
       ? (newOffset < (-(slider.track.width - slider.thumbMin.currentOffset - 20)))
       : (newOffset > (slider.track.width + slider.thumbMax.currentOffset - 20));
-    // FIXME: Bad name for boolean check, try: getLimitCoordinate || moveTo...
-    const corToMovingLimit = checkMax? (-(slider.track.width - slider.thumbMin.currentOffset - 20)) : (slider.track.width + slider.thumbMax.currentOffset - 20);
-    const zeroOffset = checkMax ? (newOffset > 0) : (newOffset < 0);
+    const thumbCollisionCoord = isMAX ? (-(slider.track.width - slider.thumbMin.currentOffset - 20)) : (slider.track.width + slider.thumbMax.currentOffset - 20);
+    const zeroOffset = isMAX ? (newOffset > 0) : (newOffset < 0);
 
-    if (movingLimit) {
-      this.#offset = corToMovingLimit;
+    if (isThumbCollision) {
+      this.#offset = thumbCollisionCoord;
     } else if (zeroOffset) {
       this.#offset = 0;
     }else {
@@ -323,7 +319,6 @@ class Thumb {
 
   moveThumb(mouse) {
     let offset = 0
-    // FIXME: Why let
     let cursorPos = Math.ceil(mouse.clientX);
     let thumbPosition = Math.ceil(this.position);
     while (cursorPos !== thumbPosition) {
@@ -355,20 +350,13 @@ class Pointer {
 
   get el() { return document.getElementById(this.id); };
 
-  // FIXME: Simplify using id and maxOrMin
   setValueOfPointer() {
-    if (this.maxOrMin) {
-      const absoluteValue = slider.thumbMax.position - slider.track.leftLimit;
-      const actualValue = parseInt(absoluteValue/slider.track.step);
-      this.el.innerHTML = actualValue;
-      return (actualValue);
-    } else {
-      const absoluteValue = slider.thumbMin.position - slider.track.leftLimit;
-      const actualValue = parseInt(absoluteValue/slider.track.step);
-      this.el.innerHTML = actualValue;
-      return (actualValue);
-    }
-  };
+    const absoluteValue = slider[this.maxOrMin ? 'thumbMax' : 'thumbMin'].position - slider.track.leftLimit;
+    const actualValue = parseInt(absoluteValue/slider.track.step);
+    this.el.innerHTML = actualValue;
+    return (actualValue);
+  }
+
 };
 
 // FIXME: Create class for it
@@ -407,29 +395,52 @@ slider.pointerMax.setValueOfPointer();
 slider.pointerMin.setValueOfPointer();
 // ----------------------------------
 
-// FIXME: Move it after function where it is called
-function getPriceLimit(pointer){
-  return parseInt(slider[pointer].el.textContent)
-}
-
 function filterByPrice() {
   const newArr = store.filter((product) => (product.actualPrice >= getPriceLimit('pointerMin')) && (product.actualPrice <= getPriceLimit('pointerMax')));
   renderSlots(newArr);
 }
 
+function getPriceLimit(pointer){
+  return parseInt(slider[pointer].el.textContent)
+}
 
 let thumbMaxActive = false;
 let thumbMinActive = false;
 
-// FIXME: Too much duplication of it. Create function like addEventListenerToThumb()
-slider.thumbMax.el.addEventListener('mousedown', (mousedown) => {
-  thumbMaxActive = true;
-  mousedown.preventDefault();
-});
-slider.thumbMin.el.addEventListener('mousedown', (mousedown) => {
-  thumbMinActive = true;
-  mousedown.preventDefault();
-});
+function addEventListenerToThumb(thumbID, eventType) {
+
+  function addEvent(id, event) {
+    slider[id].el.addEventListener(event, (event) => {
+      if (id === 'thumbMax') {
+        thumbMaxActive = true;
+      } else if (id === 'thumbMin') {
+        thumbMinActive = true;
+      }
+      event.preventDefault();
+    });
+  }
+
+  if (Array.isArray(thumbID) && typeof eventType === 'string'){
+    thumbID.forEach((id) => {
+      addEvent(id, eventType);
+    })
+  } else if (typeof thumbID === 'string' && Array.isArray(eventType)){
+    eventType.forEach((event) => {
+      addEvent(thumbID, event);
+    })
+  } else if (Array.isArray(thumbID) && Array.isArray(eventType)) {
+    thumbID.forEach((id) => {
+      eventType.forEach((event) => {
+        addEvent(id, event);
+      });
+    });
+  } else {
+    addEvent(thumbID, eventType)
+  }
+}
+
+addEventListenerToThumb(['thumbMax', 'thumbMin'], ['mousedown', 'touchstart']);
+
 window.addEventListener('mousemove', (move) => {
   if (thumbMaxActive) {
     slider.thumbMax.moveThumb(move);
@@ -448,14 +459,7 @@ window.addEventListener('mouseup', (up) => {
 
 //touchscreen
 
-slider.thumbMax.el.addEventListener('touchstart', (start) => {
-  thumbMaxActive = true;
-  start.preventDefault();
-});
-slider.thumbMin.el.addEventListener('touchstart', (start) => {
-  thumbMinActive = true;
-  start.preventDefault();
-});
+
 window.addEventListener('touchmove', (move) => {
   if (thumbMaxActive) {
     slider.thumbMax.moveThumb(move.changedTouches[0]);
