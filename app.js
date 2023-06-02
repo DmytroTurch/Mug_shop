@@ -4,7 +4,6 @@ const productSlots = document.getElementById('slotsRender');
 const cartButton = document.getElementsByClassName('cart');
 const cartPop = document.getElementsByClassName('cartPop')[0];
 const itemsLotsContainer = document.getElementsByClassName('itemsList')[0];
-const addToCart = document.getElementsByClassName('addToCart');
 const clearCartButton = document.getElementsByClassName('clearCart')[0];
 const currentSortingMethod = document.getElementById('sorting-method').value;
 
@@ -182,6 +181,8 @@ function renderSlots(array = store) {
             </div>
             `;
   });
+  const addToCart = document.getElementsByClassName('addToCart');
+  Array.from(addToCart, (button) => button.addEventListener('click', addItemToCart));
 }
 
 function addEListenersToCart() {
@@ -190,6 +191,7 @@ function addEListenersToCart() {
 }
 
 function addItemToCart(event) {
+  console.log('click')
   const theTarget = event.currentTarget.id;
   const thisItem = document.getElementById(`item${theTarget}`);
   if (!thisItem) {
@@ -228,7 +230,7 @@ function addEventListeners() {
   cartPop.addEventListener('click', closeCart);
   clearCartButton.addEventListener('click', clearCart);
 
-  Array.from(addToCart, (button) => button.addEventListener('click', addItemToCart));
+  
 
   document.querySelector('#sorting-method').addEventListener('change', chooseSortingMethod);
 
@@ -450,10 +452,12 @@ window.addEventListener('mousemove', (move) => {
   move.preventDefault();
 });
 window.addEventListener('mouseup', (up) => {
-  thumbMaxActive = false;
-  thumbMinActive = false;
-  filterByPrice()
-  up.preventDefault();
+  if (thumbMaxActive || thumbMinActive) {
+    thumbMaxActive = false;
+    thumbMinActive = false;
+    filterByPrice()
+    up.preventDefault();
+  }
 });
 
 
@@ -468,9 +472,11 @@ window.addEventListener('touchmove', (move) => {
   }
 });
 window.addEventListener('touchend', () => {
-  thumbMaxActive = false;
-  thumbMinActive = false;
-  filterByPrice()
+  if (thumbMaxActive || thumbMinActive) {
+    thumbMaxActive = false;
+    thumbMinActive = false;
+    filterByPrice()
+  }
 });
 
 renderSlots();
