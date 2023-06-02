@@ -7,8 +7,8 @@ const itemsLotsContainer = document.getElementsByClassName('itemsList')[0];
 const clearCartButton = document.getElementsByClassName('clearCart')[0];
 const currentSortingMethod = document.getElementById('sorting-method').value;
 
-const mediaQueryMax940 = window.matchMedia('(max-width: 940px)');
-const mediaQueryMin940 = window.matchMedia('(min-width: 940px)');
+const mediaQueryMax940 = window.matchMedia('(max-width: 1024px)');
+const mediaQueryMin940 = window.matchMedia('(min-width: 1024px)');
 
 const burgerRenderPlace = document.querySelector('.burger-render');
 
@@ -31,7 +31,7 @@ function openBurger(click) {
 
 // media queries
 function renderChanges(mediaObj) {
-  if (mediaObj.matches && (mediaObj.media === '(max-width: 940px)')) {
+  if (mediaObj.matches && (mediaObj.media === '(max-width: 1024px)')) {
     document.querySelector('.menu-render').innerHTML = '';
     document.querySelector('.menu-render').classList.add('render-off');
 
@@ -52,7 +52,7 @@ function renderChanges(mediaObj) {
     document.querySelector('.burger-button').addEventListener('click', openBurger);
   }
 
-  if (mediaObj.matches && (mediaObj.media === '(min-width: 940px)')) {
+  if (mediaObj.matches && (mediaObj.media === '(min-width: 1024px)')) {
     document.querySelector('.menu-render').classList.remove('render-off');
     document.querySelector('.menu-render').innerHTML = `
     <ul class="menu">
