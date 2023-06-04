@@ -1,4 +1,4 @@
-const store = [
+export const store = [
   {
     id: 1,
     name: 'Red Love Cup',
