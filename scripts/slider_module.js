@@ -1,13 +1,16 @@
 import {store} from "./products.js"
-import {slider} from "./app.js"
 
 class Track {
+    constructor(ctx) {
+        this.slider = ctx;
+    };
+
     get DOMReact(){ return document.getElementById('track').getBoundingClientRect() };
       
     get width() {return this.DOMReact.width};
     
     get step(){
-      return parseFloat((this.width / slider.max).toFixed(2));
+      return parseFloat((this.width / this.slider.max).toFixed(2));
     };
   
     get leftLimit(){ return this.DOMReact.left};
@@ -15,8 +18,9 @@ class Track {
     get rightLimit(){ return this.DOMReact.right};
   }
   class Thumb {
-    constructor (id){
-      this.id = id
+    constructor (ctx, id){
+        this.slider = ctx;
+        this.id = id
     };
   
     #offset = 0;
@@ -30,9 +34,9 @@ class Track {
       const newOffset = this.currentOffset + step;
       const isMAX = this.id === 'thumbMax';
       const isThumbCollision = isMAX
-        ? (newOffset < (-(slider.track.width - slider.thumbMin.currentOffset - 20)))
-        : (newOffset > (slider.track.width + slider.thumbMax.currentOffset - 20));
-      const thumbCollisionCoord = isMAX ? (-(slider.track.width - slider.thumbMin.currentOffset - 20)) : (slider.track.width + slider.thumbMax.currentOffset - 20);
+        ? (newOffset < (-(this.slider.track.width - this.slider.thumbMin.currentOffset - 20)))
+        : (newOffset > (this.slider.track.width + this.slider.thumbMax.currentOffset - 20));
+      const thumbCollisionCoord = isMAX ? (-(this.slider.track.width - this.slider.thumbMin.currentOffset - 20)) : (this.slider.track.width + this.slider.thumbMax.currentOffset - 20);
       const zeroOffset = isMAX ? (newOffset > 0) : (newOffset < 0);
   
       if (isThumbCollision) {
@@ -71,24 +75,25 @@ class Track {
   
         this.el.setAttribute('style', `left: ${this.currentOffset}px`);
   
-        slider.pointerMax.setValueOfPointer();
-        slider.pointerMin.setValueOfPointer();
+        this.slider.pointerMax.setValueOfPointer();
+        this.slider.pointerMin.setValueOfPointer();
         offset = 0;
       }
     }
   };
   
   class Pointer {
-    constructor (id){
-      this.id = id
+    constructor (ctx, id){
+        this.slider = ctx;
+        this.id = id
     };
     get maxOrMin() {return /[M][a][x]/.test(this.id)};
   
     get el() { return document.getElementById(this.id); };
   
     setValueOfPointer() {
-      const absoluteValue = slider[this.maxOrMin ? 'thumbMax' : 'thumbMin'].position - slider.track.leftLimit;
-      const actualValue = parseInt(absoluteValue/slider.track.step);
+      const absoluteValue = this.slider[this.maxOrMin ? 'thumbMax' : 'thumbMin'].position - this.slider.track.leftLimit;
+      const actualValue = parseInt(absoluteValue/this.slider.track.step);
       this.el.innerHTML = actualValue;
       return (actualValue);
     }
@@ -104,13 +109,13 @@ class Track {
       return Math.max(...prices);
     };
   
-    track = new Track();
+    track = new Track(this);
   
-    thumbMin = new Thumb('thumbMin');
-    thumbMax = new Thumb('thumbMax');
+    thumbMin = new Thumb(this, 'thumbMin');
+    thumbMax = new Thumb(this, 'thumbMax');
   
-    pointerMin = new Pointer('pointerMin');
-    pointerMax = new Pointer('pointerMax');
+    pointerMin = new Pointer(this, 'pointerMin');
+    pointerMax = new Pointer(this, 'pointerMax');
   };
 
-  export {Slider, Track, Pointer, Thumb}
+  export {Slider}

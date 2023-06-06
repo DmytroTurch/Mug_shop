@@ -1,6 +1,6 @@
 //  Elements from DOM
 import {store} from "./products.js";
-import * as sliderComponents from "./slider_module.js";
+import {Slider} from "./slider_module.js";
 
 const productSlots = document.getElementById('slotsRender');
 const cartButton = document.getElementsByClassName('cart');
@@ -283,8 +283,7 @@ function chooseSortingMethod(option) {
 // -----------------
 
 
-const slider = new sliderComponents.Slider;
-export {slider};
+const slider = new Slider();
 
 console.log(slider);
 // -- set initial value of counter --
