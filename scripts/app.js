@@ -53,7 +53,7 @@ function openBurger(click) {
 
 // media queries
 function renderChanges(mediaObj) {
-  if (mediaObj.matches && (mediaObj.media === '(max-width: 1024px)')) {
+  if ((mediaObj) ? (mediaObj.matches && (mediaObj.media === '(max-width: 1024px)')) : window.innerWidth <= 1024 ) {
     document.querySelector('.menu-render').innerHTML = '';
     document.querySelector('.menu-render').classList.add('render-off');
 
@@ -74,7 +74,7 @@ function renderChanges(mediaObj) {
     document.querySelector('.burger-button').addEventListener('click', openBurger);
   }
 
-  if (mediaObj.matches && (mediaObj.media === '(min-width: 1024px)')) {
+  if ((mediaObj) ? (mediaObj.matches && (mediaObj.media === '(min-width: 1024px)')) : window.innerWidth > 1024) {
     document.querySelector('.menu-render').classList.remove('render-off');
     document.querySelector('.menu-render').innerHTML = `
     <ul class="menu">
@@ -89,6 +89,8 @@ function renderChanges(mediaObj) {
     burgerRenderPlace.classList.add('render-off');
   }
 }
+
+
 // -------------
 
 // Cart interactions
@@ -410,6 +412,7 @@ window.addEventListener('touchend', () => {
   }
 });
 
+renderChanges();
 renderSlots();
 addEventListeners();
 downloadStoredCart();
