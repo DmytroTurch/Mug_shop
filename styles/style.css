@@ -310,6 +310,7 @@ nav .cart__counter .text {
 }
 
 .addToCart {
+  transition: 0s;
   cursor: pointer;
   border: none;
   offset: none;
@@ -323,7 +324,9 @@ nav .cart__counter .text {
   border-radius: 20px;
   justify-content: center;
   align-items: center;
-  transition: 0.5s;
+}
+.addToCart:active p {
+  color: gold;
 }
 .addToCart img {
   position: absolute;

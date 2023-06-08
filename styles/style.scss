@@ -347,6 +347,7 @@ nav {
 }
 
 .addToCart {
+    transition: 0s;
     cursor: pointer;
     border: none;
     offset: none;
@@ -363,7 +364,9 @@ nav {
     align-items: center;
 
     
-    transition: 0.5s;
+    &:active p{
+       color: gold;
+    }
 
     img {
         position:absolute;
