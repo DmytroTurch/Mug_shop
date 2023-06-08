@@ -17,6 +17,26 @@ const burgerRenderPlace = document.querySelector('.burger-render');
 
 const inCart = [];
 
+function downloadStoredCart() {
+  for (let i = 0; i < localStorage.length; i++){
+    if (localStorage.getItem(`item${i}`) === null) {
+      break;
+    }
+    inCart[i] = JSON.parse(localStorage.getItem(`item${i}`));
+  }
+  console.log(inCart);
+  inCart.forEach((item) => {
+    addItemToCart(undefined, item.amount, item.id); 
+  });
+}
+
+function collectItemInCartData() {
+  localStorage.clear();
+  inCart.forEach((item, ind) => {
+    localStorage.setItem(`item${ind}`, JSON.stringify(item));
+  });
+}
+
 function openBurger(click) {
   const burgerMenu = document.querySelector('.burger-menu');
   if (burgerMenu.classList.contains('burger-menu_closed')) {
@@ -84,6 +104,7 @@ function closeCart(event) {
 }
 
 function countAllItemsInCart() {
+  console.log(inCart);
   const counterNum = inCart.reduce(
     (accumulator, currentValue) => accumulator + currentValue.amount,
     0,
@@ -120,6 +141,7 @@ function clearCart() {
   }
   countAllItemsInCart();
   sumAllItemsPriceInCart();
+  collectItemInCartData();
 }
 
 function addOneOfTheseItem(event) {
@@ -139,6 +161,7 @@ function addOneOfTheseItem(event) {
   });
   countAllItemsInCart();
   sumAllItemsPriceInCart();
+  collectItemInCartData();
 }
 
 function removeOneOfTheseItem(event) {
@@ -160,6 +183,7 @@ function removeOneOfTheseItem(event) {
   });
   countAllItemsInCart();
   sumAllItemsPriceInCart();
+  collectItemInCartData();
 }
 
 // Render functions
@@ -192,39 +216,52 @@ function addEListenersToCart() {
   Array.from(document.getElementsByClassName('removeThisItem'), (minus) => minus.addEventListener('click', removeOneOfTheseItem));
 }
 
-function addItemToCart(event) {
-  console.log('click')
-  const theTarget = event.currentTarget.id;
-  const thisItem = document.getElementById(`item${theTarget}`);
-  if (!thisItem) {
-    store.forEach((item) => {
-      if (item.id === +theTarget) {
-        itemsLotsContainer.innerHTML += `
-                              <div class="item" id="item${item.id}">
-                                      <img height="40px" width="38px" src=".${item.img}" alt="${item.name}" class="cartImg">
-                                      <h1 class="item_name text text_articleHead">${item.name}</h1>
-                                      <p class="item_actPrice" id="item_actPrice${item.id}">${item.actualPrice}</p>
-                                      <div class="item_counter"> 
-                                          <button class="counterButton addThisItem" id="${item.id}" >+</button>
-                                          <p class="numberOfItem" id="amount${item.id}">1</p>
-                                          <button class="counterButton removeThisItem" id="${item.id}">-</button>     
-                                      </div>
-                                  </div>
-                              `;
-        addEListenersToCart();
-        inCart.push({
-          id: item.id,
-          amount: 1,
-          price: item.actualPrice,
-        });
-      }
-    });
-  } else {
-    addOneOfTheseItem(event);
+function addItemToCart(event, amount = 1, ID = -1) {
+  
+  let isInCart = false;
+  inCart.forEach((item) => {
+    if (ID === item.id) {
+      item.amount += (event === undefined)? 0 : amount;
+      render(ID, item.amount);
+      isInCart = true;
+    } else {
+      inCart.push({
+        id: item.id,
+        amount: amount,
+        price: item.actualPrice,
+      });
+
+      const theTarget = +(event.currentTarget.id);   
+      render(theTarget, item.amount);
+      event.preventDefault();
+
+    }
+  });
+
+  function render(targetID, amount) {
+    if (!isInCart) {
+      store.forEach((item) => {
+        if (item.id === targetID) {
+          itemsLotsContainer.innerHTML += `
+                                <div class="item" id="item${item.id}">
+                                        <img height="40px" width="38px" src=".${item.img}" alt="${item.name}" class="cartImg">
+                                        <h1 class="item_name text text_articleHead">${item.name}</h1>
+                                        <p class="item_actPrice" id="item_actPrice${item.id}">${item.actualPrice}</p>
+                                        <div class="item_counter"> 
+                                            <button class="counterButton addThisItem" id="${item.id}" >+</button>
+                                            <p class="numberOfItem" id="amount${item.id}">${amount}</p>
+                                            <button class="counterButton removeThisItem" id="${item.id}">-</button>     
+                                        </div>
+                                    </div>
+                                `;
+          addEListenersToCart();
+        }
+      });
+    }
   }
   countAllItemsInCart();
   sumAllItemsPriceInCart();
-  event.preventDefault();
+  collectItemInCartData();
 }
 
 function addEventListeners() {
@@ -375,4 +412,4 @@ window.addEventListener('touchend', () => {
 
 renderSlots();
 addEventListeners();
-
+downloadStoredCart();
