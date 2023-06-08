@@ -268,9 +268,13 @@ nav .cart__counter .text {
   width: 15%;
 }
 
+.clearCart {
+  height: 40px;
+}
+
 .sum {
   background-color: rgba(162, 95, 75, 0.8);
-  height: 15%;
+  height: 65px;
   width: inherit;
   margin-top: auto;
   border-radius: 0px 0px 20px 20px;
