@@ -216,7 +216,6 @@ nav {
 .section {
     display: flex;
     gap: 20px;
-    row-gap: 70px;
     width: 100%;
     flex-wrap: wrap;
     justify-content: center;
@@ -224,7 +223,6 @@ nav {
 
 .shopLot {
     width: 300px;
-    height: 380px;
 }
 
 .text_name {
@@ -514,6 +512,39 @@ nav {
     }
 }
 
+footer {
+    max-width: 940px;
+    min-height: 175px;
+    margin: 0px auto;
+    display: flex;
+    justify-content: space-around;
+    gap: 60px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.common__description, .contact-us__text{
+    margin-bottom: 50px;
+}
+
+.social__list {
+    margin-top: 0px;
+    margin-bottom: 30px;
+    list-style: none;
+    padding: 0;
+}
+
+.social__link{
+    padding-bottom: 5px;
+    &:last-child {
+        padding-bottom: 0px;
+    }
+}
+
 @media screen and (max-width: 1024px){
     body {
         width: 100%;
@@ -553,6 +584,8 @@ nav {
             margin: 0px;
         }
     }
+
+
 }
 
 @media screen and (max-width: 700px){
@@ -563,6 +596,16 @@ nav {
     .cartPop_content{
         width: 90vw;
         margin: 25vh 5vw;
+    }
+
+    footer {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+
+    .column {
+        text-align: center;
+        align-items: center;
     }
 }
 
