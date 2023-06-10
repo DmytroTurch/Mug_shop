@@ -512,12 +512,27 @@ nav {
     }
 }
 
+@mixin footerText($color) {
+    font-family: 'Karla', sans-serif;
+    font-weight: 400;
+    color: $color;
+    font-size: 14px;
+}
+
+.footer-text {
+    @include footerText(rgba(29, 31, 46, 0.7))
+}
+
+.footer-text_faded {
+    @include footerText(rgba(29, 31, 46, 0.3))
+}
+
 footer {
     max-width: 940px;
     min-height: 175px;
     margin: 0px auto;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     gap: 60px;
 }
 
@@ -585,6 +600,9 @@ footer {
         }
     }
 
+    .column {
+        padding: 0px 20px;
+    }
 
 }
 

@@ -464,12 +464,26 @@ nav .cart__counter .text {
   translate: 700% -37.5%;
 }
 
+.footer-text {
+  font-family: "Karla", sans-serif;
+  font-weight: 400;
+  color: rgba(29, 31, 46, 0.7);
+  font-size: 14px;
+}
+
+.footer-text_faded {
+  font-family: "Karla", sans-serif;
+  font-weight: 400;
+  color: rgba(29, 31, 46, 0.3);
+  font-size: 14px;
+}
+
 footer {
   max-width: 940px;
   min-height: 175px;
   margin: 0px auto;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   gap: 60px;
 }
 
@@ -526,6 +540,9 @@ footer {
   }
   nav .cart {
     margin: 0px;
+  }
+  .column {
+    padding: 0px 20px;
   }
 }
 @media screen and (max-width: 700px) {
