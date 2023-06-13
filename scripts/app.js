@@ -106,7 +106,6 @@ function closeCart(event) {
 }
 
 function countAllItemsInCart() {
-  console.log(inCart);
   const counterNum = inCart.reduce(
     (accumulator, currentValue) => accumulator + currentValue.amount,
     0,
@@ -147,15 +146,17 @@ function clearCart() {
 }
 
 function addOneOfTheseItem(event) {
+  let result = 0;
   inCart.forEach((item) => {
     let {id, amount} = item;
-    if (+event.currentTarget.id === id) {
+    if (parseInt(event.target.id) === id) {
       const counter = amount + 1;
       if (counter > store[id - 1].amountOfProduct) {
         alert('Sorry the number of available product is limited!');
       } else {
         document.getElementById(`amount${id}`).innerHTML = counter;
         item.amount = counter;
+        result = counter;
       }
 
       calculateSameItemsPrice(id);
@@ -164,6 +165,7 @@ function addOneOfTheseItem(event) {
   countAllItemsInCart();
   sumAllItemsPriceInCart();
   collectItemInCartData();
+  return result;
 }
 
 function removeOneOfTheseItem(event) {
@@ -210,7 +212,11 @@ function renderSlots(array = store) {
             `;
   });
   const addToCart = document.getElementsByClassName('addToCart');
-  Array.from(addToCart, (button) => button.addEventListener('click', addItemToCart));
+  Array.from(addToCart, (button) => button.addEventListener('click', (e) => {   
+    addItemToCart(e, 1, parseInt(e.target.id));
+    console.log(e);
+    console.log(parseInt(e.target.id));
+  }));
 }
 
 function addEListenersToCart() {
@@ -219,29 +225,45 @@ function addEListenersToCart() {
 }
 
 function addItemToCart(event, amount = 1, ID = -1) {
-  
   let isInCart = false;
-  inCart.forEach((item) => {
-    if (ID === item.id) {
-      item.amount += (event === undefined)? 0 : amount;
-      render(ID, item.amount);
-      isInCart = true;
-    } else {
-      inCart.push({
-        id: item.id,
-        amount: amount,
-        price: item.actualPrice,
+  if (inCart.length > 0) {
+
+    inCart.forEach((item) => {
+      if (ID === item.id) {
+        isInCart = true;
+        item.amount = (event === undefined) ? amount : addOneOfTheseItem(event);
+        document.querySelector(`#item${ID}`) ?? render(ID, item.amount);
+      }
+    });
+
+    if (!isInCart) {
+      store.forEach((item) => {
+        if (item.id === ID) {
+          inCart.push({
+            id: ID,
+            amount: amount,
+            price: item.actualPrice,
+          });
+          render(ID, amount);
+        }
       });
-
-      const theTarget = +(event.currentTarget.id);   
-      render(theTarget, item.amount);
-      event.preventDefault();
-
     }
-  });
+   } else {
+    store.forEach((item) => {
+      if (item.id === ID) {
+        inCart.push({
+          id: ID,
+          amount: amount,
+          price: item.actualPrice,
+        });
+        render(ID, amount);
+      }
+    });
+  }
+
+  console.log('here3!');
 
   function render(targetID, amount) {
-    if (!isInCart) {
       store.forEach((item) => {
         if (item.id === targetID) {
           itemsLotsContainer.innerHTML += `
@@ -259,11 +281,11 @@ function addItemToCart(event, amount = 1, ID = -1) {
           addEListenersToCart();
         }
       });
-    }
   }
   countAllItemsInCart();
   sumAllItemsPriceInCart();
   collectItemInCartData();
+  console.log(inCart);
 }
 
 function addEventListeners() {
