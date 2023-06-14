@@ -1,41 +1,16 @@
 //  Elements from DOM
 import {store} from "./products.js";
 import {Slider} from "./slider_module.js";
+import {downloadStoredCart, openCart, closeCart, clearCart, addItemToCart, cartButton, clearCartButton, cartPop} from "./cartRender_module.js"
 
 const productSlots = document.getElementById('slotsRender');
-const cartButton = document.getElementsByClassName('cart');
-const cartPop = document.getElementsByClassName('cartPop')[0];
-const itemsLotsContainer = document.getElementsByClassName('itemsList')[0];
-const clearCartButton = document.getElementsByClassName('clearCart')[0];
-const currentSortingMethod = document.getElementById('sorting-method').value;
+const currentSortingMethod = document.getElementById('sorting-method');
 
 const mediaQueryMax940 = window.matchMedia('(max-width: 1024px)');
 const mediaQueryMin940 = window.matchMedia('(min-width: 1024px)');
 
 const burgerRenderPlace = document.querySelector('.burger-render');
 
-
-const inCart = [];
-
-function downloadStoredCart() {
-  for (let i = 0; i < localStorage.length; i++){
-    if (localStorage.getItem(`item${i}`) === null) {
-      break;
-    }
-    inCart[i] = JSON.parse(localStorage.getItem(`item${i}`));
-  }
-  console.log(inCart);
-  inCart.forEach((item) => {
-    addItemToCart(undefined, item.amount, item.id); 
-  });
-}
-
-function collectItemInCartData() {
-  localStorage.clear();
-  inCart.forEach((item, ind) => {
-    localStorage.setItem(`item${ind}`, JSON.stringify(item));
-  });
-}
 
 function openBurger(click) {
   const burgerMenu = document.querySelector('.burger-menu');
@@ -94,101 +69,7 @@ function renderChanges(mediaObj) {
 // -------------
 
 // Cart interactions
-function openCart(click) {
-  cartPop.classList.add('open');
-  click.preventDefault();
-}
 
-function closeCart(event) {
-  if (event.target === cartPop) {
-    cartPop.classList.remove('open');
-  }
-}
-
-function countAllItemsInCart() {
-  const counterNum = inCart.reduce(
-    (accumulator, currentValue) => accumulator + currentValue.amount,
-    0,
-  );
-
-  document.querySelector('#cartCounter').innerHTML = `${counterNum}`;
-  document.getElementById('numberOfItems').innerHTML = `${counterNum}`;
-}
-
-function sumAllItemsPriceInCart() {
-  const counterNum = inCart.reduce(
-    (accumulator, currentValue) => accumulator + (currentValue.amount * currentValue.price),
-    0,
-  );
-
-  document.getElementById('priceSum').innerHTML = `${counterNum}`;
-}
-
-function calculateSameItemsPrice(id) {
-  const price = document.querySelector(`#item_actPrice${id}`);
-  inCart.forEach((each) => {
-    if (id === each.id) {
-      price.innerHTML = each.price * each.amount;
-    }
-  });
-}
-
-function clearCart() {
-  const itemsInCart = document.querySelectorAll('.item');
-
-  if (inCart.length) {
-    Array.from(itemsInCart, (item) => item.remove());
-    inCart.splice(0, inCart.length);
-  }
-  countAllItemsInCart();
-  sumAllItemsPriceInCart();
-  collectItemInCartData();
-}
-
-function addOneOfTheseItem(event) {
-  let result = 0;
-  inCart.forEach((item) => {
-    let {id, amount} = item;
-    if (parseInt(event.target.id) === id) {
-      const counter = amount + 1;
-      if (counter > store[id - 1].amountOfProduct) {
-        alert('Sorry the number of available product is limited!');
-      } else {
-        document.getElementById(`amount${id}`).innerHTML = counter;
-        item.amount = counter;
-        result = counter;
-      }
-
-      calculateSameItemsPrice(id);
-    }
-  });
-  countAllItemsInCart();
-  sumAllItemsPriceInCart();
-  collectItemInCartData();
-  return result;
-}
-
-function removeOneOfTheseItem(event) {
-  inCart.forEach((item) => {
-    if (+event.currentTarget.id === item.id) {
-      const counter = item.amount - 1;
-      if (counter === 0) {
-        document.querySelector(`#item${item.id}`).remove();
-        inCart.splice(inCart.indexOf(item), 1);
-      } else {
-        document.querySelector(`#amount${item.id}`).innerHTML = counter;
-        item.amount = counter;
-      }
-
-      if (document.getElementById(`item${+event.currentTarget.id}`)) {
-        calculateSameItemsPrice(item.id);
-      }
-    }
-  });
-  countAllItemsInCart();
-  sumAllItemsPriceInCart();
-  collectItemInCartData();
-}
 
 // Render functions
 
@@ -214,85 +95,17 @@ function renderSlots(array = store) {
   const addToCart = document.getElementsByClassName('addToCart');
   Array.from(addToCart, (button) => button.addEventListener('click', (e) => {   
     addItemToCart(e, 1, parseInt(e.target.id));
-    console.log(e);
-    console.log(parseInt(e.target.id));
   }));
 }
 
-function addEListenersToCart() {
-  Array.from(document.getElementsByClassName('addThisItem'), (plus) => plus.addEventListener('click', addOneOfTheseItem));
-  Array.from(document.getElementsByClassName('removeThisItem'), (minus) => minus.addEventListener('click', removeOneOfTheseItem));
-}
-
-function addItemToCart(event, amount = 1, ID = -1) {
-  let isInCart = false;
-  if (inCart.length > 0) {
-
-    inCart.forEach((item) => {
-      if (ID === item.id) {
-        isInCart = true;
-        item.amount = (event === undefined) ? amount : addOneOfTheseItem(event);
-        document.querySelector(`#item${ID}`) ?? render(ID, item.amount);
-      }
-    });
-
-    if (!isInCart) {
-      store.forEach((item) => {
-        if (item.id === ID) {
-          inCart.push({
-            id: ID,
-            amount: amount,
-            price: item.actualPrice,
-          });
-          render(ID, amount);
-        }
-      });
-    }
-   } else {
-    store.forEach((item) => {
-      if (item.id === ID) {
-        inCart.push({
-          id: ID,
-          amount: amount,
-          price: item.actualPrice,
-        });
-        render(ID, amount);
-      }
-    });
-  }
-
-  console.log('here3!');
-
-  function render(targetID, amount) {
-      store.forEach((item) => {
-        if (item.id === targetID) {
-          itemsLotsContainer.innerHTML += `
-                                <div class="item" id="item${item.id}">
-                                        <img height="40px" width="38px" src=".${item.img}" alt="${item.name}" class="cartImg">
-                                        <h1 class="item_name text text_articleHead">${item.name}</h1>
-                                        <p class="item_actPrice" id="item_actPrice${item.id}">${item.actualPrice}</p>
-                                        <div class="item_counter"> 
-                                            <button class="counterButton addThisItem" id="${item.id}" >+</button>
-                                            <p class="numberOfItem" id="amount${item.id}">${amount}</p>
-                                            <button class="counterButton removeThisItem" id="${item.id}">-</button>     
-                                        </div>
-                                    </div>
-                                `;
-          addEListenersToCart();
-        }
-      });
-  }
-  countAllItemsInCart();
-  sumAllItemsPriceInCart();
-  collectItemInCartData();
-  console.log(inCart);
-}
-
 function addEventListeners() {
-  cartButton[0].addEventListener('click', openCart);
+  cartButton.addEventListener('click', openCart);
   cartPop.addEventListener('click', closeCart);
   clearCartButton.addEventListener('click', clearCart);
-
+  document.querySelector('#checkOut').addEventListener('click', () => {
+    console.log('Here');
+    document.location = './buying_form.html';
+  });
   
 
   document.querySelector('#sorting-method').addEventListener('change', chooseSortingMethod);
@@ -321,7 +134,7 @@ function sortSize() {
 }
 
 function chooseSortingMethod(option) {
-  if (!(currentSortingMethod === option.target.value)) {
+  if (!(currentSortingMethod.value === option.target.value)) {
     switch (option.target.value) {
       case 'byPriceFromLow':
         sortBy('actualPrice', true);
@@ -346,7 +159,6 @@ function chooseSortingMethod(option) {
 
 const slider = new Slider();
 
-console.log(slider);
 // -- set initial value of counter --
 slider.pointerMax.setValueOfPointer();
 slider.pointerMin.setValueOfPointer();
@@ -438,3 +250,5 @@ renderChanges();
 renderSlots();
 addEventListeners();
 downloadStoredCart();
+
+export {addItemToCart, downloadStoredCart}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="content">
+        <header class="empty-header">
+            <img class="logo" src="images/logo/logo.png" alt="logo">
+        </header>
+        <form action="" method="post" class="application-form">
+            <main class="application">
+                <h1 class="application__title">Application</h1>
+                <div class="application__contact-data">
+                    <h3 class="recipient-data-header">Contact details of the recipient of the order</h3>
+                    <fieldset class="recipient-data">
+                        <div class="recipient-data__column">
+                            <label for="surname">Enter your surname: </label> <br>
+                            <input type="text" name="surname" id="surname" class="recipient-data__field" ><br>
+                            <label for="name">Enter your name: </label><br>
+                            <input type="text" name="name" id="name" class="recipient-data__field" >
+                        </div>
+                        <div class="recipient-data__column">
+                            <label for="number">Telephone number: </label><br>
+                            <input type="tel" name="number" id="number" class="recipient-data__field"><br>
+                            <label for="mail">E-mail address: </label><br>
+                            <input type="text" name="mail" id="mail" class="recipient-data__field">
+                        </div>
+                    </fieldset>
+                    <button class="your-city" id="buyerLocation">Kiev</button>
+                </div>
+                <div class="order"> 
+                    <div class="order__header">
+                        <h2 class="order__title">Order</h2>
+                        <p class="order__sum" id="sumOfOrder"></p>
+                    </div>
+                    <div class="order__details">
+                        <fieldset class="check-out">
+                            <div class="check-out__header">
+                                <h3 class="order__subtitle">Items</h3>
+                                <button class="change-cart-items" id="cart">Change</button>
+                            </div>
+                            <div class="itemsList">
+                    
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="delivery">
+                            <h3 class="order__subtitle">Delivery</h3>
+                            <input type="radio" id="pick-up_shop" name="delivery" value="p-up-shop">
+                            <label for="pick-up_shop">Pick up from our shop</label><br>
+                            <input type="radio" id="pick-up_post" name="delivery" value="p-up-post">
+                            <label for="pick-up_post">Pick up from post office</label><br>
+                            <input type="radio" id="courier" name="delivery" value="courier">
+                            <label for="courier">Courier at your address</label><br>
+                        </fieldset>
+
+                        <fieldset class="payment">
+                            <h3 class="order__subtitle">Payment</h3>
+                            <input type="radio" id="onDelivery" name="payment" value="onDelivery">
+                            <label for="pick-up_shop">Pay on delivery</label><br>
+                            <input type="radio" id="online" name="payment" value="online">
+                            <label for="online">Pay online</label><br>
+                        </fieldset>
+                    </div>
+                </div>
+            </main>
+            <aside class="check-out-total">
+                <h1 class="check-out-total__title">Total</h1>
+                <p class="item-price">
+                    <span class="item-amount" id="cartCounter"></span> for <span class="items-price" id="priceSum"> $</span>
+                </p>
+                <p class="delivery">Deliver price <span class="delivery-price"></span></p>
+                <p class="total-sum">To pay <span class="toPay"></span></p>
+                <input type="submit" name="confirm" value="Confirm order">
+            </aside>
+        </form>
+    </div>
+    <script type="module" src="./scripts/checkout_logic.js"></script>
+</body>
+</html>
