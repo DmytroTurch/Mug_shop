@@ -6,15 +6,18 @@ const clearCartButton = document.querySelector('.clearCart');
 
 const inCart = [];
 
-function downloadStoredCart() {
+  function downloadStoredCart() {
     for (let i = 0; i < localStorage.length; i++){
       if (localStorage.getItem(`item${i}`) === null) {
         break;
       }
       inCart[i] = JSON.parse(localStorage.getItem(`item${i}`));
     }
+  }
+
+  function renderStoredCart(){
     inCart.forEach((item) => {
-      addItemToCart(undefined, item.amount, item.id); 
+      addItemToCart(undefined, item.amount, item.id);
     });
   }
   
@@ -25,9 +28,11 @@ function downloadStoredCart() {
     });
   }
 
-function openCart(click) {
-    cartPop.classList.add('open');
-    click.preventDefault();
+  function openCart(click) {
+    if (cartPop) {
+      cartPop.classList.add('open');
+      click.preventDefault();
+    }
   }
   
   function closeCart(event) {
@@ -52,7 +57,7 @@ function openCart(click) {
       0,
     );
   
-    document.getElementById('priceSum').insertAdjacentText('afterbegin', `${counterNum}`);
+    document.getElementById('priceSum').innerHTML = `${counterNum} $`;
   }
   
   function calculateSameItemsPrice(id) {
@@ -187,5 +192,5 @@ function addEListenersToCart() {
     Array.from(document.getElementsByClassName('removeThisItem'), (minus) => minus.addEventListener('click', removeOneOfTheseItem));
 }
 
-export {downloadStoredCart, openCart, closeCart, clearCart, 
-    addItemToCart, cartButton, clearCartButton, cartPop, itemsLotsContainer};
+export {downloadStoredCart, renderStoredCart, openCart, closeCart, clearCart, 
+    addItemToCart, cartButton, clearCartButton, cartPop, itemsLotsContainer, inCart};

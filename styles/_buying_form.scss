@@ -87,6 +87,9 @@ fieldset {
     @include border-bottom;
 }
 
+.orderList {
+    margin-top: 10px;
+}
 .check-out__header {
     display: flex;
     justify-content: space-between;

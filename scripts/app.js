@@ -1,7 +1,8 @@
 //  Elements from DOM
 import {store} from "./products.js";
 import {Slider} from "./slider_module.js";
-import {downloadStoredCart, openCart, closeCart, clearCart, addItemToCart, cartButton, clearCartButton, cartPop} from "./cartRender_module.js"
+import {downloadStoredCart, renderStoredCart, openCart, closeCart, clearCart, addItemToCart, cartButton, clearCartButton, cartPop} from "./cartRender_module.js"
+import { renderFadedBackground, renderForm} from "./contact_us.js";
 
 const productSlots = document.getElementById('slotsRender');
 const currentSortingMethod = document.getElementById('sorting-method');
@@ -112,6 +113,13 @@ function addEventListeners() {
 
   mediaQueryMax940.addEventListener('change', renderChanges);
   mediaQueryMin940.addEventListener('change', renderChanges);
+
+  document.querySelector('#contactUS').addEventListener('click', () => {
+    console.log('listener working');
+    renderFadedBackground();
+    renderForm();
+   }
+  );
 }
 
 // sorting functions
@@ -250,5 +258,4 @@ renderChanges();
 renderSlots();
 addEventListeners();
 downloadStoredCart();
-
-export {addItemToCart, downloadStoredCart}
+renderStoredCart()

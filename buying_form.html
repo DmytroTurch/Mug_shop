@@ -44,14 +44,14 @@
                                 <h3 class="order__subtitle">Items</h3>
                                 <button class="change-cart-items" id="cart">Change</button>
                             </div>
-                            <div class="itemsList">
+                            <div class="orderList">
                     
                             </div>
                         </fieldset>
 
                         <fieldset class="delivery">
                             <h3 class="order__subtitle">Delivery</h3>
-                            <input type="radio" id="pick-up_shop" name="delivery" value="p-up-shop">
+                            <input type="radio" id="pick-up_shop" name="delivery" value="p-up-shop" checked="checked">
                             <label for="pick-up_shop">Pick up from our shop</label><br>
                             <input type="radio" id="pick-up_post" name="delivery" value="p-up-post">
                             <label for="pick-up_post">Pick up from post office</label><br>
@@ -61,7 +61,7 @@
 
                         <fieldset class="payment">
                             <h3 class="order__subtitle">Payment</h3>
-                            <input type="radio" id="onDelivery" name="payment" value="onDelivery">
+                            <input type="radio" id="onDelivery" name="payment" value="onDelivery" checked="checked">
                             <label for="pick-up_shop">Pay on delivery</label><br>
                             <input type="radio" id="online" name="payment" value="online">
                             <label for="online">Pay online</label><br>
@@ -72,7 +72,7 @@
             <aside class="check-out-total">
                 <h1 class="check-out-total__title">Total</h1>
                 <p class="item-price">
-                    <span class="item-amount" id="cartCounter"></span> for <span class="items-price" id="priceSum"> $</span>
+                    <span class="item-amount" id="cartCounter"></span> for <span class="items-price" id="priceSum"> </span>
                 </p>
                 <p class="delivery">Deliver price <span class="delivery-price"></span></p>
                 <p class="total-sum">To pay <span class="toPay"></span></p>
