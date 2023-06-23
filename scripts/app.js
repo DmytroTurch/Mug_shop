@@ -1,8 +1,9 @@
 //  Elements from DOM
+import emailjs from '../node_modules/@emailjs/browser/es/index.js';
 import {store} from "./products.js";
 import {Slider} from "./slider_module.js";
 import {downloadStoredCart, renderStoredCart, openCart, closeCart, clearCart, addItemToCart, cartButton, clearCartButton, cartPop} from "./cartRender_module.js"
-import { renderFadedBackground, renderForm} from "./contact_us.js";
+import {openContactForm} from "./contact_us.js";
 
 const productSlots = document.getElementById('slotsRender');
 const currentSortingMethod = document.getElementById('sorting-method');
@@ -116,8 +117,7 @@ function addEventListeners() {
 
   document.querySelector('#contactUS').addEventListener('click', () => {
     console.log('listener working');
-    renderFadedBackground();
-    renderForm();
+    openContactForm();
    }
   );
 }
@@ -259,3 +259,5 @@ renderSlots();
 addEventListeners();
 downloadStoredCart();
 renderStoredCart()
+
+

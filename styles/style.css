@@ -124,14 +124,94 @@ fieldset {
   left: 25%;
   display: flex;
 }
+.formBody svg {
+  flex-shrink: 0;
+}
 
 .leftColumn {
   background-color: rgb(162, 95, 75);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .leftColumn, .rightColumn {
   height: 100%;
   width: 50%;
+}
+
+.inputWrapper {
+  display: flex;
+  width: 90%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inputStatus {
+  width: 48px;
+  height: 48px;
+}
+
+.inputContainer {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0.9;
+}
+
+.contactUs__label {
+  color: #fff;
+  text-transform: capitalize;
+  font-size: 30px;
+}
+.contactUs__label_brown {
+  color: rgb(162, 95, 75);
+  font-weight: bold;
+}
+
+.contactUs__input {
+  height: 40px;
+  width: 80%;
+  padding: 0px 10px;
+  border-radius: 20px;
+  font-size: 20px;
+  border-style: none;
+  border: 2px solid rgb(0, 0, 0);
+}
+.contactUs__input::-moz-placeholder {
+  font-size: 20px;
+}
+.contactUs__input::placeholder {
+  font-size: 20px;
+}
+
+.contactUs__message {
+  resize: none;
+  width: 90%;
+  height: 70%;
+}
+
+.closeIcon {
+  position: absolute;
+  cursor: pointer;
+}
+.closeIcon_for-contact {
+  left: 800px;
+  top: 10px;
+}
+
+.required input {
+  border-color: #ee0404;
 }
 
 body {

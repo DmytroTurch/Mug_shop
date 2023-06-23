@@ -1,0 +1,106 @@
+.fadedBackground {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(162, 95, 75, 0.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+}
+
+.formBody {
+    width: 50%;
+    height: 80%;
+    background-color: #fff;
+    position: fixed;
+    top: 10%;
+    left: 25%;
+    display: flex;
+    & svg {
+        flex-shrink: 0;
+    }
+}
+
+.leftColumn {
+    background-color: rgba(162, 95, 75, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.leftColumn, .rightColumn {
+    height: 100%;
+    width: 50%;
+}
+.inputWrapper {
+    display: flex;
+    width: 90%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.inputStatus {
+    width: 48px;
+    height: 48px;
+} 
+
+.inputContainer {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0.9;
+}
+
+.contactUs__label {
+    color: #fff;
+    text-transform: capitalize;
+    font-size: 30px;
+    &_brown {
+        color:rgba(162, 95, 75, 1);
+        font-weight: bold;
+    }
+}
+
+.contactUs__input{ 
+    height: 40px;
+    width: 80%;
+    padding: 0px 10px;
+    border-radius: 20px;
+    font-size: 20px;
+    border-style: none;
+    border: 2px solid rgb(0, 0, 0);
+    &::placeholder {
+        font-size: 20px;
+    }
+}
+
+.contactUs__message {
+    resize: none;
+    width: 90%;
+    height: 70%;
+}
+
+.closeIcon {
+    position: absolute;
+    cursor: pointer;
+    &_for-contact{
+        left: 800px;
+        top: 10px;
+    }
+} 
+
+.required{
+    input {
+        border-color: #ee0404;
+    }
+}
