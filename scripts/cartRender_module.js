@@ -11,6 +11,7 @@ const inCart = [];
       if (localStorage.getItem(`item${i}`) === null) {
         break;
       }
+      // FIXME: Create one entity for items in card and save it as one key-value object
       inCart[i] = JSON.parse(localStorage.getItem(`item${i}`));
     }
   }
@@ -126,8 +127,10 @@ const inCart = [];
     collectItemInCartData();
   }
 
+  // FIXME: Don't use upper case for variables (ID)
   function addItemToCart(event, amount = 1, ID = -1) {
     let isInCart = false;
+    // FIXME: Do you need this > 0?
     if (inCart.length > 0) {
   
       inCart.forEach((item) => {
@@ -139,6 +142,7 @@ const inCart = [];
       });
   
       if (!isInCart) {
+        // FIXME:
         store.forEach((item) => {
           if (item.id === ID) {
             inCart.push({
@@ -151,6 +155,7 @@ const inCart = [];
         });
       }
      } else {
+      // FIXME:
       store.forEach((item) => {
         if (item.id === ID) {
           inCart.push({

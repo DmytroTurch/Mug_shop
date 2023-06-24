@@ -87,6 +87,7 @@ class Track {
         this.slider = ctx;
         this.id = id
     };
+    // FIXME: Not clear name
     get maxOrMin() {return /[M][a][x]/.test(this.id)};
   
     get el() { return document.getElementById(this.id); };

@@ -27,6 +27,7 @@ function renderForm() {
     contactsColumn.classList.add('leftColumn');
 
     messageColumn.id = 'rightColumn';
+    // FIXME: Classes in BEM style, ids in upperCase style
     messageColumn.classList.add('rightColumn');
 
     textArea.id = 'message';
