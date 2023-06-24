@@ -12,6 +12,6 @@
     },
     "rules": {
         "no-param-reassign": "off",
-        "linebreak-style": "windows"
+        "linebreak-style": 0
     }
 }
