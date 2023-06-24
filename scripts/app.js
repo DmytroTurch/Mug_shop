@@ -30,6 +30,7 @@ function openBurger(click) {
 
 // media queries
 function renderChanges(mediaObj) {
+  // FIXME: What is this? Use && ||
   if ((mediaObj) ? (mediaObj.matches && (mediaObj.media === '(max-width: 1024px)')) : window.innerWidth <= 1024 ) {
     document.querySelector('.menu-render').innerHTML = '';
     document.querySelector('.menu-render').classList.add('render-off');
@@ -51,6 +52,7 @@ function renderChanges(mediaObj) {
     document.querySelector('.burger-button').addEventListener('click', openBurger);
   }
 
+  // FIXME: What is this?
   if ((mediaObj) ? (mediaObj.matches && (mediaObj.media === '(min-width: 1024px)')) : window.innerWidth > 1024) {
     document.querySelector('.menu-render').classList.remove('render-off');
     document.querySelector('.menu-render').innerHTML = `
